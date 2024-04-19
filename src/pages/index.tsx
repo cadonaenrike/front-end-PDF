@@ -1,19 +1,7 @@
-// pages/index.tsx
+import Layout from "@/components/layout/layout";
 
-import Footer from "@/components/foooter/footer";
-import Header from "@/components/header/header";
-
-import NavBar from "@/components/navbar/navbar";
 const Home = () => {
-  return (
-    <>
-      <Header />
-      <NavBar />
-      <div className="h-screen">teste</div>
-
-      <Footer />
-    </>
-  );
+  return <div>Conteúdo principal da página Home.</div>;
 };
 
 export default Home;

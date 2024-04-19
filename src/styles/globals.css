@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
 }
 
@@ -17,10 +17,7 @@
 }
 
 body {
-  min-width: 680px !important;
-  margin: 0px !important;
-  padding: 0px !important;
-  @apply text-base bg-gradient-to-b from-transparent to-[rgb(var(--background-end-rgb))] via-[rgb(var(--background-start-rgb))];
+  @apply min-w-[680px] m-0 p-0 text-base bg-gradient-to-b from-transparent via-[rgb(var(--background-start-rgb))] to-[rgb(var(--background-end-rgb))];
 }
 
 @layer utilities {

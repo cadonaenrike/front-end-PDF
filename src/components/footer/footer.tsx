@@ -5,17 +5,13 @@ import borderFooter from "@/images/border-footer.png";
 
 const Footer = () => {
   return (
-    <footer className="bg-blue-600 text-white py-4">
-      <div className="max-w-6xl mx-auto min-h-50 px-4 flex justify-between items-center">
-        <div className="flex items-center flex-col">
-          <Image
-            src={logo}
-            alt="Caça Palavras Didáticos"
-            className="w-72 h-28 mb-14"
-          />
+    <footer className="bg-blue-600 text-white py-4 fixed bottom-0 w-full">
+      <div className="max-w-6xl mx-auto px-4 flex flex-wrap justify-between items-center">
+        <div className="flex flex-col items-center w-full sm:w-auto">
+          <Image src={logo} alt="Caça Palavras Didáticos" className="mb-14" />
         </div>
-        <div className="flex items-center flex-col mt-10 ml-2">
-          <a href="/site-protection" className="text-xs mr-6 flex items-center">
+        <div className="flex flex-col items-center mt-10 ml-2 w-full sm:w-auto">
+          <a href="/site-protection" className="text-xs flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="130"
@@ -50,64 +46,68 @@ const Footer = () => {
           </a>
         </div>
       </div>
-
-      <Image src={borderFooter} alt="border" className="w-full"></Image>
-      <div className="max-w-6xl mx-auto min-h-40 px-4 flex justify-between items-center">
-        <div className="flex items-center flex-col">
+      <Image
+        src={borderFooter}
+        alt="border"
+        layout="responsive"
+        className="w-full"
+      />
+      <div className="max-w-6xl mx-auto px-4 flex flex-wrap justify-between items-center">
+        <div className="flex flex-col items-center w-full sm:w-auto">
           <span className="text-xs">
             &copy; 2023 Caça Palavras Didáticos. Todos os direitos reservados.
           </span>
         </div>
-        <div className="flex items-center flex-col">
-          <div className="flex items-start flex-row gap-4 p-8 pt-8">
-            <a href="/facebook" className="mr-3">
+        <div className="flex flex-col items-center w-full sm:w-auto">
+          <div className="flex items-start flex-row gap-4 p- pt-2 justify-center sm:justify-start">
+            <a href="https://www.facebook.com" className="mr-3">
+              {/* Facebook Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
                 fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-                <path
-                  d="M16 8.04789C16.0003 6.51897 15.5625 5.02198 14.7385 3.73417C13.9144 2.44635 12.7385 1.42165 11.3501 0.781392C9.96173 0.141135 8.41893 -0.0878599 6.90442 0.12152C5.38991 0.330901 3.96712 0.969887 2.80451 1.96282C1.6419 2.95575 0.788165 4.26104 0.344396 5.72414C-0.0993733 7.18723 -0.114591 8.74685 0.300544 10.2183C0.71568 11.6898 1.54378 13.0115 2.68679 14.0269C3.82981 15.0424 5.23986 15.709 6.75 15.9479V10.3599H4.719V8.04789H6.75V6.28489C6.70627 5.87334 6.7536 5.4572 6.88863 5.06598C7.02366 4.67476 7.24309 4.31803 7.53136 4.02107C7.81964 3.72411 8.1697 3.49419 8.55674 3.34762C8.94379 3.20104 9.35833 3.14139 9.771 3.17289C10.371 3.18077 10.9696 3.23291 11.562 3.32889V5.29989H10.554C10.3823 5.27743 10.2077 5.29388 10.0432 5.348C9.87874 5.40213 9.72853 5.49255 9.6037 5.61258C9.47887 5.7326 9.38263 5.87916 9.3221 6.0414C9.26157 6.20365 9.23829 6.37743 9.254 6.54989V8.04989H11.473L11.118 10.3619H9.25V15.9529C11.1322 15.6551 12.8464 14.6953 14.0838 13.2461C15.3213 11.7969 16.0008 9.95353 16 8.04789Z"
-                  fill="#BAC3CA"
-                />
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
               </svg>
             </a>
-            <a href="/twitter">
+            <a href="https://www.twitter.com" className="mr-3">
+              {/* Twitter Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="14"
-                viewBox="0 0 16 14"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
                 fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-                <path
-                  d="M16 2C15.4 2.3 14.8 2.4 14.1 2.5C14.8 2.1 15.3 1.5 15.5 0.7C14.9 1.1 14.2 1.3 13.4 1.5C12.8 0.9 11.9 0.5 11 0.5C9.3 0.5 7.8 2 7.8 3.8C7.8 4.1 7.8 4.3 7.9 4.5C5.2 4.4 2.7 3.1 1.1 1.1C0.8 1.6 0.7 2.1 0.7 2.8C0.7 3.9 1.3 4.9 2.2 5.5C1.7 5.5 1.2 5.3 0.7 5.1C0.7 6.7 1.8 8 3.3 8.3C3 8.4 2.7 8.4 2.4 8.4C2.2 8.4 2 8.4 1.8 8.3C2.2 9.6 3.4 10.6 4.9 10.6C3.8 11.5 2.4 12 0.8 12C0.5 12 0.3 12 0 12C1.5 12.9 3.2 13.5 5 13.5C11 13.5 14.3 8.5 14.3 4.2C14.3 4.1 14.3 3.9 14.3 3.8C15 3.3 15.6 2.7 16 2Z"
-                  fill="#BAC3CA"
-                />
+                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
               </svg>
             </a>
-            <a href="/instagram" className="ml-3">
+            <a href="https://www.instagram.com" className="mr-3">
+              {/* Instagram Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
                 fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-                <path
-                  d="M12.145 4.85189C12.6752 4.85189 13.105 4.42208 13.105 3.89188C13.105 3.36169 12.6752 2.93188 12.145 2.93188C11.6148 2.93188 11.185 3.36169 11.185 3.89188C11.185 4.42208 11.6148 4.85189 12.145 4.85189Z"
-                  fill="#BAC3CA"
-                />
-                <path
-                  d="M8 12C5.794 12 4 10.206 4 8C4 5.794 5.794 4 8 4C10.206 4 12 5.794 12 8C12 10.206 10.206 12 8 12ZM8 6C6.897 6 6 6.897 6 8C6 9.103 6.897 10 8 10C9.103 10 10 9.103 10 8C10 6.897 9.103 6 8 6Z"
-                  fill="#BAC3CA"
-                />
-                <path
-                  d="M12 16H4C1.944 16 0 14.056 0 12V4C0 1.944 1.944 0 4 0H12C14.056 0 16 1.944 16 4V12C16 14.056 14.056 16 12 16ZM4 2C3.065 2 2 3.065 2 4V12C2 12.953 3.047 14 4 14H12C12.935 14 14 12.935 14 12V4C14 3.065 12.935 2 12 2H4Z"
-                  fill="#BAC3CA"
-                />
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
               </svg>
             </a>
           </div>
