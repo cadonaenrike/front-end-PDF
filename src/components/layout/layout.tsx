@@ -13,6 +13,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Header />
       <NavBar />
       <main className="flex-grow overflow-auto">{children}</main>
+      <Footer />
     </div>
   );
 };

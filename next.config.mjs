@@ -1,7 +1,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["facilitasystem.com.br"],
+    domains: ["media.gettyimages.com"],
   },
 };
 
