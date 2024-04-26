@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const NavBar = () => {
@@ -6,34 +7,34 @@ const NavBar = () => {
       <div className="max-w-7xl mx-auto flex justify-center w-full">
         {/* Links da NavBar */}
         <div className="flex flex-row items-center gap-x-4">
-          <a
+          <Link
             className="font-normal text-black text-xl hover:text-blue-500 dark:text-white dark:hover:text-blue-300"
-            href="#home"
+            href="/"
             aria-current="page"
           >
             Home
-          </a>
-          <a
+          </Link>
+          <Link
             className="font-normal text-black text-xl border-l-2 pl-3 hover:text-blue-500 dark:text-white dark:hover:text-blue-300"
             href="#disciplinas"
             aria-current="page"
           >
             Disciplinas
-          </a>
-          <a
+          </Link>
+          <Link
             className="font-normal text-black text-xl border-l-2 pl-4 hover:text-blue-500 dark:text-white dark:hover:text-blue-300"
             href="#categorias"
             aria-current="page"
           >
             Categorias
-          </a>
-          <a
+          </Link>
+          <Link
             className="font-normal text-black text-xl border-l-2 pl-4 hover:text-blue-500 dark:text-white dark:hover:text-blue-300"
             href="#sobre"
             aria-current="page"
           >
             Sobre
-          </a>
+          </Link>
         </div>
       </div>
     </nav>

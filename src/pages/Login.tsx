@@ -1,5 +1,7 @@
 // pages/login.tsx
 
+import Link from "next/link";
+
 const Login = () => {
   return (
     <div className="flex p-6 justify-center scroll-auto">
@@ -17,12 +19,12 @@ const Login = () => {
           className="w-full p-2 mb-4 mt-2 border rounded bg-gray-200"
           type="password"
         />
-        <a
-          href="#"
+        <Link
+          href="/Subscribe"
           className="text-black font-jost text-base font-normal hover:underline"
         >
           esqueceu a sua senha?
-        </a>
+        </Link>
         <button className="w-full bg-blue-800 text-white p-3 font-jost text-base  font-semibold rounded-md mt-8 hover:bg-blue-400">
           Entrar
         </button>
@@ -33,12 +35,12 @@ const Login = () => {
         </h2>
         <p className="text-black text-center font-jost text-lg font-medium mb-8">
           Primeiro acesso? <br />
-          <a
-            href="#"
+          <Link
+            href="/Subscribe"
             className="text-black font-jost text-base font-normal hover:underline"
           >
             Faça seu cadastro aqui!
-          </a>
+          </Link>
         </p>
 
         <label>E-mail</label>

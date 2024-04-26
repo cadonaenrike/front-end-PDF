@@ -1,5 +1,7 @@
 // pages/subscribe.tsx
 
+import Link from "next/link";
+
 const Subscribe = () => {
   return (
     <div className=" m-4 flex flex-col justify-center px-28">
@@ -153,7 +155,7 @@ const Subscribe = () => {
             </button>
 
             <button className="w-1/4 mt-2 py-2 px-4 min-h-9 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors text-center font-inter text-lg font-semibold capitalize">
-              Cancelar
+              <Link href="/Login">Cancelar</Link>
             </button>
           </div>
         </div>
