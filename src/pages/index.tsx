@@ -133,13 +133,6 @@ const Home = () => {
           <Carousel cards={cards} />
         </div>
       </div>
-
-      {/* Footer */}
-      <div className="bg-blue-800 text-white text-center p-4">
-        <Link href="/" className="text-sm">
-          Voltar ao Início
-        </Link>
-      </div>
     </div>
   );
 };
