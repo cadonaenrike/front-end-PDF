@@ -154,7 +154,7 @@ const Subscribe = () => {
               Cadastrar
             </button>
 
-            <button className="w-1/4 mt-2 py-2 px-4 min-h-9 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors text-center font-inter text-lg font-semibold capitalize">
+            <button className="w-1/3 mt-2 py-2 px-4 min-h-9 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors text-center font-inter text-lg font-semibold capitalize">
               <Link href="/Login">Cancelar</Link>
             </button>
           </div>
