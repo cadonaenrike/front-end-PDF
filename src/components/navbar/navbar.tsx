@@ -3,7 +3,7 @@ import React from "react";
 
 const NavBar = () => {
   return (
-    <nav className="bg-white text-sm py-4 dark:bg-neutral-800 shadow-md">
+    <nav className="bg-white text-sm py-4 shadow-md">
       <div className="max-w-7xl mx-auto flex justify-center w-full">
         {/* Links da NavBar */}
         <div className="flex flex-row items-center gap-x-4">

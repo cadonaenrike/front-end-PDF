@@ -150,7 +150,7 @@ const Subscribe = () => {
           </div>
 
           <div className="flex items-center justify-center flex-col">
-            <button className="w-1/4 py-2 px-4 min-h-9 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center font-inter text-lg font-semibold capitalize">
+            <button className="w-1/3 py-2 px-4 min-h-9 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center font-inter text-lg font-semibold capitalize">
               Cadastrar
             </button>
 
