@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </li>
           <li className="flex items-center p-4 border-b-2 border-black  text-black hover:bg-blue-200 transition">
             <FaSignOutAlt className="mr-2" />
-            <Link href="/about/logout" legacyBehavior>
+            <Link href="/Login" legacyBehavior>
               <a>Sair</a>
             </Link>
           </li>

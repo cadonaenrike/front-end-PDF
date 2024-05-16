@@ -30,7 +30,7 @@ const NavBar = () => {
           </Link>
           <Link
             className="font-normal text-black text-xl border-l-2 pl-4 hover:text-blue-500"
-            href="#sobre"
+            href="/About"
             aria-current="page"
           >
             Sobre
