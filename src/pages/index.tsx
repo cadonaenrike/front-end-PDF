@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Banner from "@/images/banner.png";
 import Carousel from "@/components/carrosel/carrosel";
+import CategoryButton from "@/components/category/CategoryButton";
+import { categories } from "@/components/category/CategoryesImagesArray";
 
 const Home = () => {
   const cardData = {
@@ -30,12 +32,19 @@ const Home = () => {
       </div>
 
       {/* Card Section */}
-      <div className="p-4 mt-20">
+      <div className="mx-48  mt-20">
         <h2 className="text-black text-center font-jost text-5xl font-semibold mb-6">
           Categorias
         </h2>
-        <div className="mx-auto px-4 sm:px-2 md:px-8 lg:px-20 xl:px-40">
-          <Carousel cards={cards} />
+        <div className="mx-auto px-4 sm:px-2 md:px-8 lg:px-20 xl:px-40 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {categories.map((category, index) => (
+            <CategoryButton
+              key={index}
+              name={category.name}
+              path={category.path}
+              imageSrc={category.image}
+            />
+          ))}
         </div>
       </div>
 
