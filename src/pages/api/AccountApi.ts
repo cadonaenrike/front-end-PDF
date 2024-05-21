@@ -8,6 +8,7 @@ export const fetchAccountData = async (): Promise<AccountData> => {
     sexo: "Masculino",
     dataNascimento: "01/01/1990",
     email: "joao.silva@example.com",
+    cpf: "415144132415461",
     telefoneCelular: "(11) 98765-4321",
     endereco: {
       endereco: "Rua Exemplo, 123",

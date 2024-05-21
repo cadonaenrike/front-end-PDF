@@ -7,7 +7,7 @@ interface SidebarProps {
   activeComponent: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
+const SidebarAbout: React.FC<SidebarProps> = ({
   setActiveComponent,
   activeComponent,
 }) => {
@@ -60,4 +60,4 @@ const Sidebar: React.FC<SidebarProps> = ({
   );
 };
 
-export default Sidebar;
+export default SidebarAbout;

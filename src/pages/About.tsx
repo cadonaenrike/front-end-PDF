@@ -1,7 +1,7 @@
 // src/pages/about/index.tsx
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import Sidebar from "@/components/Sidebar/SideBar";
+import Sidebar from "@/components/Sidebar/SideBarAbout";
 
 const Account = dynamic(() => import("@/components/About/Account"));
 const Orders = dynamic(() => import("@/components/About/Orders"));

@@ -4,7 +4,8 @@ import Link from "next/link";
 import Banner from "@/images/banner.png";
 import Carousel from "@/components/carrosel/carrosel";
 import CategoryButton from "@/components/category/CategoryButton";
-import { categories } from "@/components/category/CategoryesImagesArray";
+import { categories } from "@/components/data/CategoryesImagesArray";
+
 
 const Home = () => {
   const cardData = {

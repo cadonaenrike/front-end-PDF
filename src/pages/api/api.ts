@@ -1,15 +1,15 @@
 import axios from "axios";
 
-const baseURL = "https://back-end-teste-facilita-system.vercel.app/";
+const baseURL = "https://back-eight-chi.vercel.app";
 
 const api = axios.create({
   baseURL,
 });
 
 api.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem("token");
+  const token = process.env.NEXT_PUBLIC_API_KEY;
   if (token) {
-    config.headers["token"] = token;
+    config.headers["api-key"] = token;
   }
   return config;
 });
