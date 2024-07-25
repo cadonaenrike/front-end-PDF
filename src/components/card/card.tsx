@@ -1,64 +1,49 @@
 import Link from "next/link";
 import Image from "next/image";
-import PropTypes from "prop-types";
+import React from "react";
+import { ProductData } from "@/interfaces/ProductData";
 
-interface CardComponentProps {
-  title: string;
-  description: string;
-  price: string;
-  imageSrc: string;
-  imageAlt?: string;
-  link: string;
-}
-
-// Seu componente CardComponent
-const CardComponent: React.FC<CardComponentProps> = ({
+const CardComponent: React.FC<ProductData> = ({
   title,
   description,
   price,
   link,
+  category,
   imageSrc,
   imageAlt,
 }) => {
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg p-3 m-3">
+    <div className="max-h-96 max-w-60 flex flex-col border items-center justify-center  rounded shadow-lg p-3 m-3">
       {imageSrc && (
         <Image
-          className="w-full object-cover"
+          objectFit="cover"
+          quality={100}
           src={imageSrc}
           alt={imageAlt || "Product Image"}
-          width={384}
-          height={256}
-          layout="responsive"
+          width={150}
+          height={100}
         />
       )}
-      <div className="px-6 py-4">
-        <p className="text-black font-jost text-lg font-bold leading-5">
+      <div className="flex flex-col px-3">
+        <p className="text-black font-jost text-sm font-bold leading-5">
           {title}: {description}
         </p>
-      </div>
-      <div className="px-6 pt-4 pb-2">
+
         <div className="flex items-center mt-2">
           <span className="text-gray-600">⭐⭐⭐⭐⭐</span>
         </div>
+        <p className="text-xs">{category}</p>
         <div className="flex items-center mt-3">
-          <Link href={link} className=" text-blue-800 font-bold text-3xl py-2 ">
-            {price}
+          <Link href={link} legacyBehavior>
+            <a className="text-blue-800 font-bold text-3xl py-2">
+              R$ {price.toFixed(2)}
+            </a>
           </Link>
           <span className="text-gray-900 text-sm ml-2">no pix</span>
         </div>
       </div>
     </div>
   );
-};
-
-CardComponent.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  price: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired,
-  imageSrc: PropTypes.string.isRequired,
-  imageAlt: PropTypes.string,
 };
 
 export default CardComponent;

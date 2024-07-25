@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import logo from "@/images/logo.png"; // Substitua pelo caminho correto do seu logo
+import logo from "@/images/logo.png"; 
 
 const Header = () => {
   return (

@@ -1,24 +1,31 @@
 import Image from "next/image";
 import React from "react";
-import logo from "@/images/logo.png";
+import logo from "@/images/logoAtualizadaFotter.png";
 import borderFooter from "@/images/border-footer.png";
+import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-blue-600 text-white py-4">
-      <div className="max-w-6xl mx-auto min-h-50 px-4 flex justify-between items-center">
+    <footer className="bg-blue-600 w-full h-full px-2 flex flex-col gap-2 text-white py-10">
+      <div className="w-full  flex justify-around items-center">
         <div className="flex items-center flex-col">
           <Image
             src={logo}
             alt="Caça Palavras Didáticos"
-            className="w-72 h-28 mb-14"
+            width={250}
+            height={200}
+            objectFit="cover"
+            quality={100}
           />
         </div>
-        <div className="flex items-center flex-col mt-10 ml-2">
-          <a href="/site-protection" className="text-xs mr-6 flex items-center">
+        <div className="flex items-center ">
+          <Link
+            href="/site-protection"
+            className="text-xs mr-6 flex items-center"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="130"
+              width="180"
               height="34"
               viewBox="0 0 130 34"
               fill="none"
@@ -47,24 +54,24 @@ const Footer = () => {
                 </clipPath>
               </defs>
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
 
       <Image src={borderFooter} alt="border" className="w-full"></Image>
-      <div className="max-w-6xl mx-auto min-h-40 px-4 flex justify-between items-center">
-        <div className="flex items-center flex-col">
-          <span className="text-xs">
+      <div className="w-full pt-8 flex justify-around items-center">
+        <div className="flex w-full items-center flex-col">
+          <span className="text-sm">
             &copy; 2023 Caça Palavras Didáticos. Todos os direitos reservados.
           </span>
         </div>
-        <div className="flex items-center flex-col">
-          <div className="flex items-start flex-row gap-4 p-8 pt-8">
-            <a href="/facebook" className="mr-3">
+        <div className="flex items-center w-full flex-col">
+          <div className="flex items-start flex-row gap-4 ">
+            <Link href="/facebook" className="mr-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="20"
+                height="20"
                 viewBox="0 0 16 16"
                 fill="none"
               >
@@ -73,12 +80,12 @@ const Footer = () => {
                   fill="#BAC3CA"
                 />
               </svg>
-            </a>
-            <a href="/twitter">
+            </Link>
+            <Link href="/twitter">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="14"
+                width="20"
+                height="20"
                 viewBox="0 0 16 14"
                 fill="none"
               >
@@ -87,12 +94,12 @@ const Footer = () => {
                   fill="#BAC3CA"
                 />
               </svg>
-            </a>
-            <a href="/instagram" className="ml-3">
+            </Link>
+            <Link href="/instagram" className="ml-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="20"
+                height="20"
                 viewBox="0 0 16 16"
                 fill="none"
               >
@@ -109,7 +116,7 @@ const Footer = () => {
                   fill="#BAC3CA"
                 />
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

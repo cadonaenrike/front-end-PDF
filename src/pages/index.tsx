@@ -5,18 +5,20 @@ import Banner from "@/images/banner.png";
 import Carousel from "@/components/carrosel/carrosel";
 import CategoryButton from "@/components/category/CategoryButton";
 import { categories } from "@/components/data/CategoryesImagesArray";
-
+import { ProductData } from "@/interfaces/ProductData";
 
 const Home = () => {
-  const cardData = {
+  const cardData: ProductData = {
+    id: "1",
     title: "ALFABETIZAÇÃO",
     description:
       "PRINCÍPIO ALFABÉTICO, CONSCIÊNCIA FONOLÓGICA, MATERIAL DE APOIO",
-    price: "R$ 19,90",
+    price: 19.9,
     link: "/Login",
     imageSrc:
       "https://media.gettyimages.com/id/157482029/pt/foto/pilha-de-livros.jpg?s=612x612&w=0&k=20&c=myOJb6QEPe3OX7IO_youGJY_qc9KF699encUvHRP1E0=",
     imageAlt: "Capa da Apostila",
+    category: "Alfabetização",
   };
   const cards = Array(3).fill([cardData, cardData, cardData]).flat();
 
