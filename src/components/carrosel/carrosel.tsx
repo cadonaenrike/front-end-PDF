@@ -6,17 +6,11 @@ import "slick-carousel/slick/slick-theme.css";
 import left from "@/images/arrowLeft.png";
 import rigth from "@/images/arrowRigth.jpg";
 import Image from "next/image";
-interface CardProps {
-  title: string;
-  description: string;
-  price: string;
-  link: string;
-  imageSrc: string;
-  imageAlt?: string;
-}
+import { ProductData } from "@/interfaces/ProductData";
+
 
 interface CarouselProps {
-  cards: CardProps[];
+  cards: ProductData[];
 }
 
 // Componentes de setas personalizadas utilizando Tailwind CSS

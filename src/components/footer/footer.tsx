@@ -58,7 +58,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <Image src={borderFooter} alt="border" className="w-full"></Image>
+      <Image src={borderFooter} alt="border" width={2000} height={10}></Image>
       <div className="w-full pt-8 flex justify-around items-center">
         <div className="flex w-full items-center flex-col">
           <span className="text-sm">

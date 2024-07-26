@@ -9,9 +9,9 @@ const Header = () => {
       <nav className="flex items-center justify-between w-full px-4 py-2.5 md:py-4 lg:px-8 mx-auto max-w-screen-2xl">
         {/* Logo */}
         <div className="flex-initial">
-          <a className="flex items-center">
+          <Link href={"/"} className="flex items-center">
             <Image src={logo} alt="Logo" width={150} height={50} />
-          </a>
+          </Link>
         </div>
 
         {/* Search Form - now visible on all devices */}

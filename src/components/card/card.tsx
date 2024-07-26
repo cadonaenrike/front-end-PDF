@@ -38,9 +38,9 @@ const CardComponent: React.FC<ProductData> = ({
 
         <div className="flex items-center mt-3">
           <Link href={link} legacyBehavior>
-            <a className="text-blue-800 font-bold text-3xl py-2">
+            <div className="text-blue-800 font-bold text-3xl py-2">
               R$ {price.toFixed(2)}
-            </a>
+            </div>
           </Link>
           <span className="text-gray-900 text-sm ml-2">no pix</span>
         </div>

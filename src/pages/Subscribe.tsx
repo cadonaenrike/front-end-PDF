@@ -37,7 +37,7 @@ const Subscribe = () => {
     e.preventDefault();
     try {
       console.log(accountData);
-      const response = await createAccount(accountData);
+      // const response = await createAccount(accountData);
       toast.success("Conta criada com sucesso!");
       router.push("/login");
     } catch (error) {
