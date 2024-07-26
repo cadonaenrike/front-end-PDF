@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import { useRouter } from "next/router";
 import { ProductData } from "@/interfaces/ProductData";
 import Filters from "@/components/Sidebar/SideBarFilter";
 import CardComponent from "@/components/card/card";
+import productsData from "@/components/data/productsData";
 
-const HomePage: React.FC = () => {
+const CategoriesAllPage: React.FC = () => {
+  const router = useRouter();
+  const { category } = router.query;
+
   const [products, setProducts] = useState<ProductData[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -12,23 +16,17 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     // Fetch products from an API or define them statically
-    const fetchedProducts: ProductData[] = [
-      {
-        id: '1',
-        title: "ALFABETIZAÇÃO",
-        description: "PRINCÍPIO ALFABÉTICO, CONSCIÊNCIA FONOLÓGICA, MATERIAL DE APOIO",
-        price: 19.9,
-        link: "/Login",
-        imageSrc: "https://media.gettyimages.com/id/157482029/pt/foto/pilha-de-livros.jpg?s=612x612&w=0&k=20&c=myOJb6QEPe3OX7IO_youGJY_qc9KF699encUvHRP1E0=",
-        imageAlt: "Capa da Apostila",
-        category: "Alfabetização",
-      },
-      // Add more products here
-    ];
+    const fetchedProducts: ProductData[] = productsData;
 
     setProducts(fetchedProducts);
     setFilteredProducts(fetchedProducts);
   }, []);
+
+  useEffect(() => {
+    if (category) {
+      setSelectedCategories([decodeURIComponent(category as string)]);
+    }
+  }, [category]);
 
   useEffect(() => {
     let tempProducts = products;
@@ -40,7 +38,9 @@ const HomePage: React.FC = () => {
     }
 
     if (selectedPriceRange) {
-      const [minPrice, maxPrice] = selectedPriceRange.split("-").map((price) => parseFloat(price));
+      const [minPrice, maxPrice] = selectedPriceRange
+        .split("-")
+        .map((price) => parseFloat(price));
       tempProducts = tempProducts.filter(
         (product) => product.price >= minPrice && product.price <= maxPrice
       );
@@ -51,16 +51,18 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="w-full h-auto bg-white">
-      <div className="flex">
-        <Filters
-          selectedCategories={selectedCategories}
-          setSelectedCategories={setSelectedCategories}
-          selectedPriceRange={selectedPriceRange}
-          setSelectedPriceRange={setSelectedPriceRange}
-        />
-        <div className="flex flex-wrap">
+      <div className="w-full gap-2 flex m-0 p-0">
+        <div className="flex min-w-[15%] ">
+          <Filters
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            selectedPriceRange={selectedPriceRange}
+            setSelectedPriceRange={setSelectedPriceRange}
+          />
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6  ">
           {filteredProducts.map((product) => (
-           <CardComponent key={product.id} {...product} />
+            <CardComponent key={product.id} {...product} />
           ))}
         </div>
       </div>
@@ -68,4 +70,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default CategoriesAllPage;

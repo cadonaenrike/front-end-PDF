@@ -16,21 +16,21 @@ const NavBar = () => {
           </Link>
           <Link
             className="font-normal text-black text-xl border-l-2 pl-3 hover:text-blue-500"
-            href="#disciplinas"
+            href="/categories"
             aria-current="page"
           >
             Disciplinas
           </Link>
           <Link
             className="font-normal text-black text-xl border-l-2 pl-4 hover:text-blue-500"
-            href="#categorias"
+            href="/categories"
             aria-current="page"
           >
             Categorias
           </Link>
           <Link
             className="font-normal text-black text-xl border-l-2 pl-4 hover:text-blue-500"
-            href="/About"
+            href="/AboutCompany"
             aria-current="page"
           >
             Sobre

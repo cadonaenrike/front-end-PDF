@@ -13,7 +13,7 @@ const CardComponent: React.FC<ProductData> = ({
   imageAlt,
 }) => {
   return (
-    <div className="max-h-96 max-w-60 flex flex-col border items-center justify-center  rounded shadow-lg p-3 m-3">
+    <div className="flex max-h-[500px] flex-col border items-center justify-center  rounded shadow-lg p-3 m-3">
       {imageSrc && (
         <Image
           objectFit="cover"
@@ -24,15 +24,18 @@ const CardComponent: React.FC<ProductData> = ({
           height={100}
         />
       )}
-      <div className="flex flex-col px-3">
-        <p className="text-black font-jost text-sm font-bold leading-5">
-          {title}: {description}
-        </p>
-
-        <div className="flex items-center mt-2">
+      <div className="flex pt-4  flex-col  px-3">
+        <div className="flex flex-col my-2">
+          <p className="text-black  font-jost text-lg font-extrabold leading-5">
+            {title}
+          </p>
+          <p className="text-black mt-2 font-jost text-base  ">{description}</p>
+          <p className="text-base mt-2  ">{category}</p>
+        </div>
+        <div className="flex items-center">
           <span className="text-gray-600">⭐⭐⭐⭐⭐</span>
         </div>
-        <p className="text-xs">{category}</p>
+
         <div className="flex items-center mt-3">
           <Link href={link} legacyBehavior>
             <a className="text-blue-800 font-bold text-3xl py-2">

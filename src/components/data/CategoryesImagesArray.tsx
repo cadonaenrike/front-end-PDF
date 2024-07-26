@@ -1,4 +1,3 @@
-// src/categories.ts
 import EnsinoMedio from "@/images/imagesCategoryes/EnsinoMedio.png";
 import Alfabetizacao from "@/images/imagesCategoryes/Alfabetizacao.png";
 import Artes from "@/images/imagesCategoryes/Artes.png";
@@ -21,44 +20,76 @@ import Quimica from "@/images/imagesCategoryes/Quimica.png";
 import Sociologia from "@/images/imagesCategoryes/Sociologia.png";
 
 export const categories = [
-  { name: "Novo Ensino Médio", path: "/novo-ensino-medio", image: EnsinoMedio },
-  { name: "Alfabetização", path: "/alfabetizacao", image: Alfabetizacao },
-  { name: "Arte", path: "/arte", image: Artes },
-  { name: "Biologia", path: "/biologia", image: Biologia },
-  { name: "Ciências", path: "/ciencias", image: Ciencias },
+  {
+    name: "Novo Ensino Médio",
+    path: "/categories?category=Novo%20Ensino%20Médio",
+    image: EnsinoMedio,
+  },
+  {
+    name: "Alfabetização",
+    path: "/categories?category=Alfabetização",
+    image: Alfabetizacao,
+  },
+  { name: "Arte", path: "/categories?category=Arte", image: Artes },
+  { name: "Biologia", path: "/categories?category=Biologia", image: Biologia },
+  { name: "Ciências", path: "/categories?category=Ciências", image: Ciencias },
   {
     name: "Datas comemorativas e Apostila das cores",
-    path: "/datas-comemorativas",
+    path: "/categories?category=Datas%20comemorativas%20e%20Apostila%20das%20cores",
     image: DatasComemorativas,
   },
-  { name: "Educação Física", path: "/educacao-fisica", image: EducacaoFisica },
+  {
+    name: "Educação Física",
+    path: "/categories?category=Educação%20Física",
+    image: EducacaoFisica,
+  },
   {
     name: "Ensino Religioso",
-    path: "/ensino-religioso",
+    path: "/categories?category=Ensino%20Religioso",
     image: EnsinoReligioso,
   },
-  { name: "Filosofia", path: "/filosofia", image: Filosofia },
-  { name: "Física", path: "/fisica", image: Fisica },
-  { name: "Geografia", path: "/geografia", image: Geografia },
-  { name: "História", path: "/historia", image: Historia },
+  {
+    name: "Filosofia",
+    path: "/categories?category=Filosofia",
+    image: Filosofia,
+  },
+  { name: "Física", path: "/categories?category=Física", image: Fisica },
+  {
+    name: "Geografia",
+    path: "/categories?category=Geografia",
+    image: Geografia,
+  },
+  { name: "História", path: "/categories?category=História", image: Historia },
   {
     name: "Humanidade e Ciências Sociais",
-    path: "/humanidade-ciencias-sociais",
+    path: "/categories?category=Humanidade%20e%20Ciências%20Sociais",
     image: Humanidade,
   },
-  { name: "Inglês", path: "/ingles", image: Ingles },
+  { name: "Inglês", path: "/categories?category=Inglês", image: Ingles },
   {
     name: "Língua Portuguesa",
-    path: "/lingua-portuguesa",
+    path: "/categories?category=Língua%20Portuguesa",
     image: LinguaPortuguesa,
   },
-  { name: "Matemática", path: "/matematica", image: Matematica },
+  {
+    name: "Matemática",
+    path: "/categories?category=Matemática",
+    image: Matematica,
+  },
   {
     name: "Metodologia Ativas",
-    path: "/metodologia-ativas",
+    path: "/categories?category=Metodologia%20Ativas",
     image: MetodologiaAtivas,
   },
-  { name: "Projeto de vida", path: "/projeto-de-vida", image: ProjetoVida },
-  { name: "Química", path: "/quimica", image: Quimica },
-  { name: "Sociologia", path: "/sociologia", image: Sociologia },
+  {
+    name: "Projeto de vida",
+    path: "/categories?category=Projeto%20de%20vida",
+    image: ProjetoVida,
+  },
+  { name: "Química", path: "/categories?category=Química", image: Quimica },
+  {
+    name: "Sociologia",
+    path: "/categories?category=Sociologia",
+    image: Sociologia,
+  },
 ];
