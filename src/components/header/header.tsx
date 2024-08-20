@@ -1,9 +1,23 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "@/images/logoAtualizadaFotter.png";
 import Link from "next/link";
+import decryptJwt from "../decripted/decript";
+import { JwtPayload } from "jsonwebtoken";
 
 const Header = () => {
+  const [userData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    const decodedToken = decryptJwt();
+
+    if (decodedToken) {
+      setUserData(decodedToken);
+    }
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b-4 border-blue-800">
       <nav className="flex items-center justify-between w-full px-4 py-2.5 md:py-4 lg:px-8 mx-auto max-w-screen-2xl">
@@ -71,9 +85,15 @@ const Header = () => {
                   fill="black"
                 />
               </svg>
-              <span className="text-neutral-700 text-sm whitespace-nowrap">
-                Seja Bem-vindo
-              </span>
+              {userData?.usuario?.nome !== null ? (
+                <span className="text-neutral-700 text-sm whitespace-nowrap">
+                  {userData?.usuario.nome}
+                </span>
+              ) : (
+                <span className="text-neutral-700 text-sm whitespace-nowrap">
+                  Seja Bem-vindo
+                </span>
+              )}
             </div>
           </Link>
 

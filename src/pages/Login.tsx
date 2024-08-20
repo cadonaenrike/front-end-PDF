@@ -9,7 +9,7 @@ import { LoginData } from "@/interfaces/LoginData";
 
 const Login = () => {
   const [loginData, setLoginData] = useState<LoginData>({
-    login: "",
+    email: "",
     senha: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,8 +30,9 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       const response = await login(loginData);
+      sessionStorage.setItem("jwt", response.token);
       toast.success("Login realizado com sucesso!");
-      router.push("/dashboard"); // Redirecionar para o dashboard ou página principal
+      router.push("/");
     } catch (error) {
       toast.error("Falha ao fazer login. Por favor, tente novamente.");
     } finally {
@@ -50,8 +51,8 @@ const Login = () => {
           <input
             className="w-full p-2 mb-4 mt-2 border rounded bg-gray-200"
             type="email"
-            name="login"
-            value={loginData.login}
+            name="email"
+            value={loginData.email}
             onChange={handleChange}
           />
           <label>Senha</label>
@@ -96,7 +97,12 @@ const Login = () => {
           className="w-full p-2 mb-4 border mt-2 rounded bg-gray-200"
           type="email"
         />
-        <button className="w-full bg-blue-800 text-white p-3 font-jost text-base font-semibold rounded-md mt-8 hover:bg-blue-400">
+        <button
+          onClick={(e) => {
+            window.location.href = "/Subscribe";
+          }}
+          className="w-full bg-blue-800 text-white p-3 font-jost text-base font-semibold rounded-md mt-8 hover:bg-blue-400"
+        >
           Cadastrar
         </button>
       </div>

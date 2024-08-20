@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
+
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { createAccount } from "./api/SubscribeApi";
+import { useRouter } from "next/navigation";
 
 interface AccountData {
   nome: string;
@@ -37,9 +38,9 @@ const Subscribe = () => {
     e.preventDefault();
     try {
       console.log(accountData);
-      // const response = await createAccount(accountData);
+      const response = await createAccount(accountData);
+      window.location.href = "/Login";
       toast.success("Conta criada com sucesso!");
-      router.push("/login");
     } catch (error) {
       console.error("Failed to create account:", error);
       toast.error("Falha ao criar a conta. Por favor, tente novamente.");
