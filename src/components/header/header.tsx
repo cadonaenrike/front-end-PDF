@@ -105,7 +105,7 @@ const Header = () => {
           </Link>
 
           {/* Cart Icon */}
-          <Link href={"/Login"}>
+          <Link href={"/"}>
             <div className="flex items-center p-2 bg-gray-200 border border-gray-200 shadow-sm rounded-lg">
               <svg
                 className="mr-2"
