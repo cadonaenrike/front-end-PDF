@@ -5,19 +5,26 @@ import React, { useEffect, useState } from "react";
 import logo from "@/images/logoAtualizadaFotter.png";
 import Link from "next/link";
 import decryptJwt from "../decripted/decript";
-import { JwtPayload } from "jsonwebtoken";
 
 const Header = () => {
   const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
-    const decodedToken = decryptJwt();
+    if (typeof window !== "undefined") {
+      // Verifica se o código está sendo executado no lado do cliente
+      setTimeout(() => {
+        const token = sessionStorage.getItem("jwt");
 
-    if (decodedToken) {
-      setUserData(decodedToken);
+        if (token) {
+          const decodedToken = decryptJwt();
+
+          if (decodedToken) {
+            setUserData(decodedToken);
+          }
+        }
+      }, 4000);
     }
   }, []);
-
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b-4 border-blue-800">
       <nav className="flex items-center justify-between w-full px-4 py-2.5 md:py-4 lg:px-8 mx-auto max-w-screen-2xl">
@@ -85,9 +92,9 @@ const Header = () => {
                   fill="black"
                 />
               </svg>
-              {userData?.usuario?.nome !== null ? (
+              {userData && userData.usuario.nome !== null ? (
                 <span className="text-neutral-700 text-sm whitespace-nowrap">
-                  {userData?.usuario.nome}
+                  {userData.usuario.nome}
                 </span>
               ) : (
                 <span className="text-neutral-700 text-sm whitespace-nowrap">

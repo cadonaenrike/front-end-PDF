@@ -1,36 +1,52 @@
 import { useEffect, useState } from "react";
-import { AccountData } from "@/interfaces/aboutType";
 import decryptJwt from "@/components/decripted/decript";
-import { Dialog, DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
-import { DialogHeader } from "@/components/ui/dialog";
-import { toast } from "react-toastify";
 import { DecodedToken } from "@/interfaces/decodeType";
+import ChangePasswordModal from "./modals/ChangePasswordModal";
+import EditDataModal from "./modals/EditDataModal";
+
+import { GetAbout } from "@/pages/api/about";
+import { toast } from "react-toastify";
+import EditAddressModal from "./modals/editAdresModal";
 
 const Account = () => {
   const [accountData, setAccountData] = useState<DecodedToken | null>(null);
   const [loading, setLoading] = useState(true);
+  const [updateTrigger, setUpdateTrigger] = useState(false);
 
-  useEffect(() => {
-    const fetchData = () => {
-      try {
-        const data = decryptJwt(); // Chama o serviço para decodificar o JWT
-        setAccountData(data);
+  const fetchData = async () => {
+    try {
+      const data = decryptJwt();
+      setAccountData(data); // Define o token decodificado no estado
+
+      const response = await GetAbout(data!.usuario.id);
+      if (response.status === 200) {
+        setAccountData(response.data);
         setLoading(false);
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
+      } else {
+        toast.error("Erro ao buscar dados da conta.");
         setLoading(false);
       }
-    };
-
-    fetchData();
-  }, []);
-
-  const handleSave = async (formData: FormData) => {
-    // Função de exemplo para salvar os dados
-    console.log("Dados do formulário:", formData);
-    toast.success("Login realizado com sucesso!");
+    } catch (error: any) {
+      if (error.response) {
+        const { error: errorMessage, message } = error.response.data;
+        toast.error(`${errorMessage}: ${message}`, {
+          autoClose: 4000,
+        });
+      } else {
+        toast.error("Erro ao buscar dados da conta.");
+        console.error("Erro ao buscar dados da conta:", error);
+      }
+      setLoading(false);
+    }
   };
 
+  useEffect(() => {
+    fetchData();
+  }, [updateTrigger]);
+
+  const triggerUpdate = () => {
+    setUpdateTrigger(!updateTrigger);
+  };
   return (
     <div className="p-8">
       <h2 className="text-2xl font-bold mb-6">Minha Conta</h2>
@@ -42,10 +58,7 @@ const Account = () => {
         ) : (
           <>
             <div className="bg-white rounded-xl p-6">
-              <h3 className="text-xl font-bold mb-4 flex items-center">
-                <span className="mr-2">{/* Ícone SVG */}</span>
-                Dados Cadastrais
-              </h3>
+              <h3 className="text-xl font-bold mb-4">Dados Cadastrais</h3>
               <p>
                 <strong>Nome:</strong> {accountData?.usuario.nome}
               </p>
@@ -64,74 +77,23 @@ const Account = () => {
                 {accountData?.usuario.telefonecelular}
               </p>
               <div className="mt-4 flex gap-2">
-                <DialogModal
-                  title="Alterar Senha"
-                  triggerText="Alterar Senha"
-                  inputs={[
-                    {
-                      label: "Senha Atual",
-                      name: "currentPassword",
-                      type: "password",
-                    },
-                    {
-                      label: "Nova Senha",
-                      name: "newPassword",
-                      type: "password",
-                    },
-                    {
-                      label: "Confirmar Nova Senha",
-                      name: "confirmPassword",
-                      type: "password",
-                    },
-                  ]}
-                  handleSave={handleSave}
-                />
-                <DialogModal
-                  title="Editar Dados"
-                  triggerText="Editar Dados"
-                  inputs={[
-                    {
-                      label: "Nome",
-                      name: "nome",
-                      type: "text",
-                      defaultValue: accountData?.usuario.nome,
-                    },
-                    {
-                      label: "Sexo",
-                      name: "sexo",
-                      type: "text",
-                      defaultValue: accountData?.usuario.sexo as string,
-                    },
-                    {
-                      label: "Data de Nascimento",
-                      name: "datanascimento",
-                      type: "date",
-                      defaultValue: accountData?.usuario.datanascimento,
-                    },
-                    {
-                      label: "Email",
-                      name: "email",
-                      type: "email",
-                      defaultValue: accountData?.usuario.email,
-                    },
-                    {
-                      label: "Telefone Celular",
-                      name: "telefonecelular",
-                      type: "text",
-                      defaultValue: accountData?.usuario.telefonecelular,
-                    },
-                  ]}
-                  handleSave={handleSave}
+                <ChangePasswordModal triggerUpdate={triggerUpdate} />
+                <EditDataModal
+                  triggerUpdate={triggerUpdate}
+                  defaultData={{
+                    nome: accountData?.usuario.nome || "",
+                    sexo: accountData?.usuario.sexo || "",
+                    dataNascimento: accountData?.usuario.datanascimento || "",
+                    email: accountData?.usuario.email || "",
+                    telefoneCelular: accountData?.usuario.telefonecelular || "",
+                  }}
                 />
               </div>
             </div>
             <div className="bg-white rounded-xl p-6 mt-6">
-              <h3 className="text-xl font-bold mb-4 flex items-center">
-                <span className="mr-2">{/* Ícone SVG */}</span>
-                Endereço Principal
-              </h3>
+              <h3 className="text-xl font-bold mb-4">Endereço Principal</h3>
               <p>
-                <strong>Endereço:</strong> {accountData?.usuario.endereco}
+                <strong>Endereço:</strong> {accountData?.usuario.rua}
               </p>
               <p>
                 <strong>Bairro:</strong> {accountData?.usuario.bairro}
@@ -146,54 +108,15 @@ const Account = () => {
                 <strong>País:</strong> {accountData?.usuario.pais}
               </p>
               <div className="mt-4 flex gap-2">
-                <DialogModal
-                  title="Editar Endereço Principal"
-                  triggerText="Editar Endereço Principal"
-                  inputs={[
-                    {
-                      label: "Endereço",
-                      name: "endereco",
-                      type: "text",
-                      defaultValue: accountData?.usuario.endereco as string,
-                    },
-                    {
-                      label: "Bairro",
-                      name: "bairro",
-                      type: "text",
-                      defaultValue: accountData?.usuario.bairro as string,
-                    },
-                    {
-                      label: "Cidade/UF",
-                      name: "cidadeuf",
-                      type: "text",
-                      defaultValue: accountData?.usuario.cidadeuf as string,
-                    },
-                    {
-                      label: "CEP",
-                      name: "cep",
-                      type: "text",
-                      defaultValue: accountData?.usuario.cep as string,
-                    },
-                    {
-                      label: "País",
-                      name: "pais",
-                      type: "text",
-                      defaultValue: accountData?.usuario.pais as string,
-                    },
-                  ]}
-                  handleSave={handleSave}
-                />
-                <DialogModal
-                  title="Cadastrar Novo Endereço"
-                  triggerText="Cadastrar Novo Endereço"
-                  inputs={[
-                    { label: "Endereço", name: "endereco", type: "text" },
-                    { label: "Bairro", name: "bairro", type: "text" },
-                    { label: "Cidade/UF", name: "cidadeuf", type: "text" },
-                    { label: "CEP", name: "cep", type: "text" },
-                    { label: "País", name: "pais", type: "text" },
-                  ]}
-                  handleSave={handleSave}
+                <EditAddressModal
+                  triggerUpdate={triggerUpdate}
+                  defaultAddress={{
+                    endereco: accountData?.usuario.rua || "",
+                    bairro: accountData?.usuario.bairro || "",
+                    cidadeuf: accountData?.usuario.cidadeuf || "",
+                    cep: accountData?.usuario.cep || "",
+                    pais: accountData?.usuario.pais || "",
+                  }}
                 />
               </div>
             </div>
@@ -201,62 +124,6 @@ const Account = () => {
         )}
       </div>
     </div>
-  );
-};
-
-interface DialogModalProps {
-  title: string;
-  triggerText: string;
-  inputs: {
-    label: string;
-    name: string;
-    type: string;
-    defaultValue?: string | undefined;
-  }[];
-  handleSave: (formData: FormData) => void;
-}
-
-const DialogModal: React.FC<DialogModalProps> = ({
-  title,
-  triggerText,
-  inputs,
-  handleSave,
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    handleSave(formData);
-    setIsOpen(false);
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded">
-          {triggerText}
-        </button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>{title}</DialogHeader>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {inputs.map((input, index) => (
-            <div key={index} className="flex flex-col text-sm gap-1">
-              <label htmlFor={input.name}>{input.label}</label>
-              <input
-                required
-                type={input.type}
-                name={input.name}
-                defaultValue={input.defaultValue}
-                className="border rounded-md outline-none py-2 px-2"
-              />
-            </div>
-          ))}
-          <div className="flex justify-end mt-4"></div>
-        </form>
-      </DialogContent>
-    </Dialog>
   );
 };
 

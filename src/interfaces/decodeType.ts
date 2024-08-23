@@ -9,7 +9,7 @@ export interface Usuario {
   cpf: string;
   telefonecelular: string;
   sexo: string | null;
-  endereco: string | null;
+  rua: string | null;
   bairro: string | null;
   cidadeuf: string | null;
   cep: string | null;

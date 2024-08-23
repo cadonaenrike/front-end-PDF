@@ -8,25 +8,26 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { toast } from "react-toastify";
 import { EditAbout } from "@/pages/api/about";
-import decryptJwt from "@/components/decripted/decript";
 import { DecodedToken } from "@/interfaces/decodeType";
+import decryptJwt from "@/components/decripted/decript";
 
-interface EditAddressModalProps {
+interface EditDataModalProps {
   triggerUpdate: () => void;
-  defaultAddress: {
-    endereco: string;
-    bairro: string;
-    cidadeuf: string;
-    cep: string;
-    pais: string;
+  defaultData: {
+    nome: string;
+    sexo: string;
+    dataNascimento: string;
+    email: string;
+    telefoneCelular: string;
   };
 }
 
-const EditAddressModal: React.FC<EditAddressModalProps> = ({
+const EditDataModal: React.FC<EditDataModalProps> = ({
   triggerUpdate,
-  defaultAddress,
+  defaultData,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [accountData, setAccountData] = useState<DecodedToken | null>(null);
@@ -43,34 +44,39 @@ const EditAddressModal: React.FC<EditAddressModalProps> = ({
     fetchData();
   }, []);
 
+  console.log(accountData);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault(); // Evita o reload da página
+
     const formData = new FormData(event.currentTarget);
 
     const data = {
-      rua: formData.get("endereco"),
-      bairro: formData.get("bairro"),
-      cidadeUF: formData.get("cidadeuf"),
-      cep: formData.get("cep"),
-      pais: formData.get("pais"),
+      nome: formData.get("nome"),
+      sexo: formData.get("sexo"),
+      dataNascimento: formData.get("dataNascimento"),
+      email: formData.get("email"),
+      telefoneCelular: formData.get("telefoneCelular"),
     };
 
     try {
-      const response = await EditAbout(data, accountData!.usuario.id); // Ajuste o caminho aqui conforme a necessidade
+      const response = await EditAbout(data, accountData!.usuario.id);
       if (response.status === 200) {
-        toast.success("Endereço alterado com sucesso!");
+        toast.success("Dados alterados com sucesso!", {
+          autoClose: 2000,
+        });
         triggerUpdate(); // Atualiza os dados no componente Account
         setIsOpen(false); // Fecha o modal
       }
     } catch (error: any) {
+      // Verifica se o erro tem uma resposta da API
       if (error.response) {
         const { error: errorMessage, message } = error.response.data;
         toast.error(`${errorMessage}: ${message}`, {
           autoClose: 4000,
         });
       } else {
-        toast.error("Erro ao alterar o endereço.");
-        console.error("Erro ao alterar o endereço:", error);
+        toast.error("Erro ao alterar os dados.");
+        console.error("Erro ao alterar os dados:", error);
       }
     }
   };
@@ -79,91 +85,86 @@ const EditAddressModal: React.FC<EditAddressModalProps> = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-          Editar Endereço Principal
+          Editar Dados
         </button>
       </DialogTrigger>
       <DialogContent className="p-6 bg-white rounded-lg shadow-lg max-w-md w-full">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            Editar Endereço Principal
+            Editar Dados
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-500">
-            Preencha os campos abaixo para editar o endereço principal.
+            Preencha os campos abaixo para editar seus dados.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>
             <label
-              htmlFor="endereco"
+              htmlFor="nome"
               className="block text-sm font-medium text-gray-700"
             >
-              Endereço
+              Nome
             </label>
             <input
               type="text"
-              name="endereco"
-              defaultValue={defaultAddress.endereco}
-              required
+              name="nome"
+              defaultValue={defaultData.nome}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
             <label
-              htmlFor="bairro"
+              htmlFor="sexo"
               className="block text-sm font-medium text-gray-700"
             >
-              Bairro
+              Sexo
             </label>
             <input
               type="text"
-              name="bairro"
-              defaultValue={defaultAddress.bairro}
-              required
+              name="sexo"
+              defaultValue={defaultData.sexo}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
             <label
-              htmlFor="cidadeuf"
+              htmlFor="dataNascimento"
               className="block text-sm font-medium text-gray-700"
             >
-              Cidade/UF
+              Data de Nascimento
             </label>
             <input
-              type="text"
-              name="cidadeuf"
-              defaultValue={defaultAddress.cidadeuf}
-              required
+              type="date"
+              name="dataNascimento"
+              defaultValue={defaultData.dataNascimento}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
             <label
-              htmlFor="cep"
+              htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
-              CEP
+              Email
             </label>
             <input
-              type="text"
-              name="cep"
-              defaultValue={defaultAddress.cep}
-              required
+              type="email"
+              name="email"
+              defaultValue={defaultData.email}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
             <label
-              htmlFor="pais"
+              htmlFor="telefoneCelular"
               className="block text-sm font-medium text-gray-700"
             >
-              País
+              Telefone Celular
             </label>
             <input
               type="text"
-              name="pais"
-              defaultValue={defaultAddress.pais}
-              required
+              name="telefoneCelular"
+              defaultValue={defaultData.telefoneCelular}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -181,4 +182,4 @@ const EditAddressModal: React.FC<EditAddressModalProps> = ({
   );
 };
 
-export default EditAddressModal;
+export default EditDataModal;

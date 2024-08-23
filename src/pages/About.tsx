@@ -1,7 +1,7 @@
-// src/pages/about/index.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Sidebar from "@/components/Sidebar/SideBarAbout";
+import { useRouter } from "next/navigation";
 
 const Account = dynamic(() => import("@/components/About/Account"));
 const Orders = dynamic(() => import("@/components/About/Orders"));
@@ -9,6 +9,23 @@ const Library = dynamic(() => import("@/components/About/Library"));
 
 const About = () => {
   const [activeComponent, setActiveComponent] = useState("Account");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("jwt");
+
+    if (!token) {
+      window.location.href = "Login";
+    } else {
+      setIsAuthenticated(true); 
+    }
+  }, [router]);
+
+  if (!isAuthenticated) {
+    
+    return null;
+  }
 
   const renderContent = () => {
     switch (activeComponent) {
@@ -24,12 +41,12 @@ const About = () => {
   };
 
   return (
-    <div className="flex ">
+    <div className="flex">
       <Sidebar
         setActiveComponent={setActiveComponent}
         activeComponent={activeComponent}
       />
-      <div className="flex-grow p-6 ">{renderContent()}</div>
+      <div className="flex-grow p-6">{renderContent()}</div>
     </div>
   );
 };

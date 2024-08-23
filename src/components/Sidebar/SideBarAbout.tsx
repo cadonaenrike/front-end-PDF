@@ -11,6 +11,13 @@ const SidebarAbout: React.FC<SidebarProps> = ({
   setActiveComponent,
   activeComponent,
 }) => {
+  const handleLogout = () => {
+    // Remove o token do sessionStorage
+    sessionStorage.removeItem("jwt");
+    // Redireciona para a página inicial
+    window.location.href = "/";
+  };
+
   return (
     <div className="w-1/5 h-screen mt-8 bg-white ">
       <nav className="mt-4 mx-4">
@@ -50,9 +57,7 @@ const SidebarAbout: React.FC<SidebarProps> = ({
           </li>
           <li className="flex items-center p-4 border-b-2 border-black  text-black hover:bg-blue-200 transition">
             <FaSignOutAlt className="mr-2" />
-            <Link href="/Login" legacyBehavior>
-              Sair
-            </Link>
+            <button onClick={handleLogout}>Sair</button>
           </li>
         </ul>
       </nav>
