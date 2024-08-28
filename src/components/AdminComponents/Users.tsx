@@ -66,10 +66,10 @@ const Users = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap border-b">
                   <div className="flex space-x-4">
-                    <button className="text-blue-500 hover:text-blue-700">
+                    <button className="text-gray-800 hover:text-gray-400">
                       <FaEdit />
                     </button>
-                    <button className="text-red-500 hover:text-red-700">
+                    <button className="text-gray-800 hover:text-gray-400">
                       <FaTrash />
                     </button>
                   </div>
