@@ -1,58 +1,101 @@
 import Image from "next/image";
-import Carousel from "@/components/carrosel/carrosel";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { ProductData } from "@/interfaces/ProductData";
-import { useState } from "react";
+import { getAllProducts, getProductById } from "./api/LIbraryApi";
+import { FaStar } from "react-icons/fa";
+import Carousel from "@/components/carrosel/carrosel";
 
 const ProductPage = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const [product, setProduct] = useState<ProductData | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [cards, setCards] = useState<ProductData[]>([]);
 
-  const product: ProductData = {
-    id: "1",
-    title:
-      "APOSTILA DE ALFABETIZAÇÃO – PRINCÍPIO ALFABÉTICO, CONSCIÊNCIA FONOLÓGICA E MATERIAL DE APOIO",
-    description:
-      "Este COMBO compreende 3 apostilas para o componente curricular de QUÍMICA para o Ensino Médio. As apostilas abordam todos os principais conteúdos do componente curricular, de acordo com as habilidades da BNCC, para cada ano de ensino.",
-    price: 19.9,
-    link: "/Login",
-    imageSrc:
-      "https://media.gettyimages.com/id/157482029/pt/foto/pilha-de-livros.jpg?s=612x612&w=0&k=20&c=myOJb6QEPe3OX7IO_youGJY_qc9KF699encUvHRP1E0=",
-    imageAlt: "Capa da Apostila",
-    category: "Alfabetização",
-  };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const products = await getAllProducts();
+        const mappedProducts: ProductData[] = products.map((product: any) => ({
+          id: product.id.toString(),
+          title: product.nome_produto,
+          description: product.descricao,
+          price: parseFloat(product.valor),
+          link: "/categories",
+          imageSrc: `data:image/png;base64,${product.fotos[0]}`,
+          imageAlt: product.nome_produto,
+          category: product.categoria,
+        }));
+        setCards(mappedProducts);
+      } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
+      }
+    };
 
-  const relatedProducts = Array(3).fill(product);
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (id) {
+      const numericId = Array.isArray(id)
+        ? parseInt(id[0], 10)
+        : parseInt(id, 10);
+
+      const fetchProduct = async () => {
+        try {
+          const fetchedProduct = await getProductById(numericId);
+          const mappedProduct: ProductData = {
+            id: fetchedProduct.id.toString(),
+            title: fetchedProduct.nome_produto,
+            description: fetchedProduct.descricao,
+            price: parseFloat(fetchedProduct.valor),
+            link: "/categories",
+            imageSrc: fetchedProduct.fotos
+              ? `data:image/png;base64,${fetchedProduct.fotos[0]}`
+              : "/path/to/default-image.png", // Imagem padrão se fotos for null
+            imageAlt: fetchedProduct.nome_produto,
+            category: fetchedProduct.categoria,
+          };
+          setProduct(mappedProduct);
+        } catch (error) {
+          console.error("Erro ao carregar o produto:", error);
+        }
+      };
+
+      fetchProduct();
+    }
+  }, [id]);
+
+  if (!product) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 mt-4">
-    
-   
-
       {/* Detalhes do Produto */}
-      <div className="flex flex-col md:flex-row mt-8">
-        <div className="flex-1">
-          <Image
-            src={product.imageSrc}
-            alt={product.imageAlt}
-            width={500}
-            height={500}
-            layout="responsive"
-            className="rounded"
-          />
+      <div className="flex flex-col md:flex-row mt-8 items-start">
+        <div className="w-full md:w-[80%]">
+          <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded overflow-hidden">
+            <Image
+              src={product.imageSrc}
+              alt={product.imageAlt}
+              width={250}
+              height={250}
+              layout="responsive"
+              objectFit="contain"
+              quality={100}
+              className="object-contain max-h-[50vh]"
+            />
+          </div>
         </div>
-        <div className="flex-1 md:ml-8 mt-4 md:mt-0">
+        <div className="w-full md:w-[30%] md:ml-8 mt-4 md:mt-0">
           <h1 className="text-2xl font-semibold">{product.title}</h1>
-          <p className="text-gray-600 mt-2">Código: AP4545</p>
+          <p className="text-gray-600 mt-2">Código: {product.id}</p>
           <div className="flex items-center mt-2">
-            {/* Estrelas */}
             <div className="flex space-x-1">
               {[...Array(5)].map((_, i) => (
-                <Image
-                  key={i}
-                  src="/icons/star-outline.svg"
-                  alt="Star"
-                  width={20}
-                  height={20}
-                />
+                <FaStar key={i} className="text-amber-500" />
               ))}
             </div>
           </div>
@@ -89,18 +132,22 @@ const ProductPage = () => {
       </div>
 
       {/* Descrição */}
-      <div className="mt-12">
-        <h2 className="text-2xl font-semibold">Descrição</h2>
-        <p className="text-gray-700 mt-4">{product.description}</p>
+      <div className="w-full flex flex-col my-12 ">
+        <h2 className=" text-center font-jost text-5xl mb-12 font-semibold">
+          Descrição
+        </h2>
+        <p className="text-gray-700  md:text-2xl mt-4">{product.description}</p>
       </div>
 
       {/* Produtos Relacionados */}
-      <div className="mt-16">
-        <h2 className="text-2xl font-semibold mb-6">Produtos Relacionados</h2>
-        <Carousel cards={relatedProducts} />
+      <div className="p-4 mt-40">
+        <h2 className="text-black text-center font-jost text-5xl font-semibold mb-6">
+          Produtos Relacionados
+        </h2>
+        <div className="mx-auto px-4 sm:px-2 md:px-8 lg:px-20 xl:px-40">
+          <Carousel cards={cards} />
+        </div>
       </div>
-
-      
     </div>
   );
 };

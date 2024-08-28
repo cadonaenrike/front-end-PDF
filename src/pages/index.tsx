@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Banner from "@/images/banner.png";
 import Carousel from "@/components/carrosel/carrosel";
@@ -5,21 +6,45 @@ import CategoryButton from "@/components/category/CategoryButton";
 import { categories } from "@/components/data/CategoryesImagesArray";
 import { ProductData } from "@/interfaces/ProductData";
 import Link from "next/link";
+import { getAllProducts } from "./api/LIbraryApi";
 
 const Home = () => {
-  const cardData: ProductData = {
-    id: "1",
-    title: "ALFABETIZAÇÃO",
-    description:
-      "PRINCÍPIO ALFABÉTICO, CONSCIÊNCIA FONOLÓGICA, MATERIAL DE APOIO",
-    price: 19.9,
-    link: "/Login",
-    imageSrc:
-      "https://media.gettyimages.com/id/157482029/pt/foto/pilha-de-livros.jpg?s=612x612&w=0&k=20&c=myOJb6QEPe3OX7IO_youGJY_qc9KF699encUvHRP1E0=",
-    imageAlt: "Capa da Apostila",
-    category: "Alfabetização",
-  };
-  const cards = Array(3).fill([cardData, cardData, cardData]).flat();
+  const [cards, setCards] = useState<ProductData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const products = await getAllProducts();
+        const mappedProducts: ProductData[] = products.map((product: any) => ({
+          id: product.id.toString(),
+          title: product.nome_produto,
+          description: product.descricao,
+          price: parseFloat(product.valor),
+          link: "/categories",
+          imageSrc: `data:image/png;base64,${product.fotos[0]}`,
+          imageAlt: product.nome_produto,
+          category: product.categoria,
+        }));
+        setCards(mappedProducts);
+      } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center p-6">
+        <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
+        <p className="mt-2 text-gray-500">Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="">
@@ -60,6 +85,7 @@ const Home = () => {
           Conheça o nosso diferencial das outras plataformas
         </p>
 
+        {/* Differentiator Cards */}
         <div className="flex flex-wrap justify-center items-center gap-10 mt-6">
           <div className="flex flex-col items-center">
             <svg

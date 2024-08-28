@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { ProductData } from "@/interfaces/ProductData";
+import { FetchedProduct, ProductData } from "@/interfaces/ProductData";
 import Filters from "@/components/Sidebar/SideBarFilter";
 import CardComponent from "@/components/card/card";
-import productsData from "@/components/data/productsData";
+import { getAllProducts } from "./api/LIbraryApi";
 
 const CategoriesAllPage: React.FC = () => {
   const router = useRouter();
@@ -13,13 +13,36 @@ const CategoriesAllPage: React.FC = () => {
   const [filteredProducts, setFilteredProducts] = useState<ProductData[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch products from an API or define them statically
-    const fetchedProducts: ProductData[] = productsData;
+    const fetchProducts = async () => {
+      try {
+        const fetchedProducts: FetchedProduct[] = await getAllProducts();
 
-    setProducts(fetchedProducts);
-    setFilteredProducts(fetchedProducts);
+        const mappedProducts: ProductData[] = fetchedProducts.map(
+          (product: FetchedProduct) => ({
+            id: product.id.toString(),
+            title: product.nome_produto,
+            description: product.descricao,
+            price: parseFloat(product.valor),
+            link: "/Login",
+            imageSrc: `data:image/png;base64,${product.fotos[0]}`,
+            imageAlt: product.nome_produto,
+            category: product.categoria,
+          })
+        );
+
+        setProducts(mappedProducts);
+        setFilteredProducts(mappedProducts);
+      } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   useEffect(() => {
@@ -48,6 +71,15 @@ const CategoriesAllPage: React.FC = () => {
 
     setFilteredProducts(tempProducts);
   }, [selectedCategories, selectedPriceRange, products]);
+
+  if (loading) {
+    return (
+      <div className="text-center p-6">
+        <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
+        <p className="mt-2 text-gray-500">Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-auto bg-white">

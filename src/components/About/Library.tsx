@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import CardComponent from "@/components/card/card";
 import { ProductData } from "@/interfaces/ProductData";
-import { fetchCardData } from "@/pages/api/LIbraryApi";
+
 
 const Library = () => {
   const [cards, setCards] = useState<ProductData[]>([]);
@@ -11,8 +11,8 @@ const Library = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data: ProductData[] = await fetchCardData();
-        setCards(data);
+        // const data: ProductData[] = await fetchCardData();
+        // setCards(data);
         setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar dados:", error);

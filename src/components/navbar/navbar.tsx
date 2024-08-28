@@ -14,13 +14,13 @@ const NavBar = () => {
           >
             Home
           </Link>
-          <Link
+          {/* <Link
             className="font-normal text-black text-xl border-l-2 pl-3 hover:text-blue-500"
             href="/categories"
             aria-current="page"
           >
             Disciplinas
-          </Link>
+          </Link> */}
           <Link
             className="font-normal text-black text-xl border-l-2 pl-4 hover:text-blue-500"
             href="/categories"
