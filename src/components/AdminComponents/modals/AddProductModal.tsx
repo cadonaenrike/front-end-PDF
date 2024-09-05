@@ -27,6 +27,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [fotoFiles, setFotoFiles] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const categorias = [
     "Novo Ensino Médio",
@@ -75,30 +76,62 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
-    const formData = new FormData();
-    formData.append("nome_produto", nomeProduto);
-    formData.append("descricao", descricao);
-    formData.append("categoria", categoria);
-    formData.append("nivel_ensino", nivelEnsino);
-    formData.append("valor", valor.replace("R$", "").trim());
-    formData.append("componente_curricular", componenteCurricular);
-
-    if (pdfFile) {
-      formData.append("pdf", pdfFile);
-    }
-
-    if (fotoFiles) {
-      Array.from(fotoFiles).forEach((file) => {
-        formData.append("fotos", file);
-      });
-    }
-
-    try {
-      await addProduct(formData);
+  
+    const partSize = 1024 * 1024 * 4; // 4 MB por parte
+    const nomeArquivo = pdfFile?.name || "";
+    const totalParts = Math.ceil(pdfFile!.size / partSize || 0);
+  
+    const uploadPdfInParts = async (file: File) => {
+      for (let i = 0; i < totalParts; i++) {
+        const start = i * partSize;
+        const end = Math.min(start + partSize, file.size);
+        const part = file.slice(start, end);
+  
+        const formData = new FormData();
+        formData.append("part", part);
+        formData.append("partIndex", i.toString());
+        formData.append("totalParts", totalParts.toString());
+        formData.append("nomeArquivo", nomeArquivo);
+        formData.append("nome_produto", nomeProduto);
+        formData.append("descricao", descricao);
+        formData.append("categoria", categoria);
+        formData.append("nivel_ensino", nivelEnsino);
+        formData.append("valor", valor.replace("R$", "").trim());
+        formData.append("componente_curricular", componenteCurricular);
+  
+        // Adiciona as fotos apenas na primeira parte
+        if (i === 0 && fotoFiles) {
+          Array.from(fotoFiles).forEach((file) => {
+            formData.append("fotos", file);
+          });
+        }
+  
+        try {
+          await fetch('https://back-eight-chi.vercel.app/adicionar-produto-v2', {
+            method: "POST",
+            headers: {
+              "api-key": "tpfTech", // Use sua chave de API
+            },
+            body: formData,
+          });
+  
+          console.log(`Parte ${i + 1} de ${totalParts} enviada com sucesso`);
+  
+          // Atualiza o progresso do upload
+          setUploadProgress(((i + 1) / totalParts) * 100);
+        } catch (error) {
+          console.error("Erro ao enviar parte:", error);
+          setLoading(false);
+          return;
+        }
+      }
+  
+      console.log("Upload completo");
       toast.success("Produto Cadastrado com sucesso!");
-      triggerUpdate();
+      setLoading(false);
       setIsOpen(false);
+      triggerUpdate();
+      // Limpar os campos do formulário
       setNomeProduto("");
       setDescricao("");
       setCategoria("");
@@ -107,13 +140,16 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
       setComponenteCurricular("");
       setPdfFile(null);
       setFotoFiles(null);
-    } catch (error) {
-      console.error("Erro ao adicionar produto:", error);
-      toast.error("Erro ao adicionar produto!");
-    } finally {
+    };
+  
+    if (pdfFile) {
+      uploadPdfInParts(pdfFile);
+    } else {
+      alert("Selecione um arquivo PDF para enviar");
       setLoading(false);
     }
   };
+  
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
