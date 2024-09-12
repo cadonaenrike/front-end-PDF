@@ -83,8 +83,8 @@ const CategoriesAllPage: React.FC = () => {
 
   return (
     <div className="w-full h-auto bg-white">
-      <div className="w-full gap-2 flex m-0 p-0">
-        <div className="flex min-w-[15%] ">
+      <div className="w-full gap-2 flex flex-col md:flex-row m-0 p-0">
+        <div className="w-full md:w-[20%] lg:w-[15%] mb-4 md:mb-0">
           <Filters
             selectedCategories={selectedCategories}
             setSelectedCategories={setSelectedCategories}
@@ -92,7 +92,7 @@ const CategoriesAllPage: React.FC = () => {
             setSelectedPriceRange={setSelectedPriceRange}
           />
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6  ">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 w-full">
           {filteredProducts.map((product) => (
             <CardComponent key={product.id} {...product} />
           ))}

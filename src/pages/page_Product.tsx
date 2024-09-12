@@ -80,13 +80,13 @@ const ProductPage = () => {
     <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 mt-4">
       {/* Detalhes do Produto */}
       <div className="flex flex-col md:flex-row mt-8 items-start">
-        <div className="w-full md:w-[80%]">
+        <div className="w-full md:w-[65%] lg:w-[60%]">
           <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded overflow-hidden">
             <Image
               src={product.imageSrc}
               alt={product.imageAlt}
-              width={250}
-              height={250}
+              width={300}
+              height={300}
               layout="responsive"
               objectFit="contain"
               quality={100}
@@ -94,7 +94,7 @@ const ProductPage = () => {
             />
           </div>
         </div>
-        <div className="w-full md:w-[30%] md:ml-8 mt-4 md:mt-0">
+        <div className="w-full md:w-[35%] lg:w-[40%] md:ml-8 mt-4 md:mt-0">
           <h1 className="text-2xl font-semibold">{product.title}</h1>
           <p className="text-gray-600 mt-2">Código: {product.id}</p>
           <div className="flex items-center mt-2">
@@ -113,7 +113,7 @@ const ProductPage = () => {
               name="quantity"
               value={quantity}
               onChange={(e) => setQuantity(parseInt(e.target.value))}
-              className="mt-1 block w-16 p-2 border-gray-300 rounded"
+              className="mt-1 block w-20 p-2 border-gray-300 rounded"
             >
               {[1, 2, 3, 4, 5].map((q) => (
                 <option key={q} value={q}>
@@ -137,16 +137,18 @@ const ProductPage = () => {
       </div>
 
       {/* Descrição */}
-      <div className="w-full flex flex-col my-12 ">
-        <h2 className=" text-center font-jost text-5xl mb-12 font-semibold">
+      <div className="w-full flex flex-col my-12">
+        <h2 className="text-center font-jost text-4xl md:text-5xl mb-12 font-semibold">
           Descrição
         </h2>
-        <p className="text-gray-700  md:text-2xl mt-4">{product.description}</p>
+        <p className="text-gray-700 text-lg md:text-2xl mt-4">
+          {product.description}
+        </p>
       </div>
 
       {/* Produtos Relacionados */}
-      <div className="p-4 mt-40">
-        <h2 className="text-black text-center font-jost text-5xl font-semibold mb-6">
+      <div className="p-4 mt-20">
+        <h2 className="text-black text-center font-jost text-4xl md:text-5xl font-semibold mb-6">
           Produtos Relacionados
         </h2>
         <div className="mx-auto px-4 sm:px-2 md:px-8 lg:px-20 xl:px-40">

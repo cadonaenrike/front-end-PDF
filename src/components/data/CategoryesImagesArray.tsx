@@ -60,11 +60,7 @@ export const categories = [
     image: Geografia,
   },
   { name: "História", path: "/categories?category=História", image: Historia },
-  {
-    name: "Humanidade e Ciências Sociais",
-    path: "/categories?category=Humanidade%20e%20Ciências%20Sociais",
-    image: Humanidade,
-  },
+
   { name: "Inglês", path: "/categories?category=Inglês", image: Ingles },
   {
     name: "Língua Portuguesa",
@@ -76,16 +72,7 @@ export const categories = [
     path: "/categories?category=Matemática",
     image: Matematica,
   },
-  {
-    name: "Metodologia Ativas",
-    path: "/categories?category=Metodologia%20Ativas",
-    image: MetodologiaAtivas,
-  },
-  {
-    name: "Projeto de vida",
-    path: "/categories?category=Projeto%20de%20vida",
-    image: ProjetoVida,
-  },
+
   { name: "Química", path: "/categories?category=Química", image: Quimica },
   {
     name: "Sociologia",

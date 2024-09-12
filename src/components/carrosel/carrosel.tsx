@@ -8,7 +8,6 @@ import rigth from "@/images/arrowRigth.jpg";
 import Image from "next/image";
 import { ProductData } from "@/interfaces/ProductData";
 
-
 interface CarouselProps {
   cards: ProductData[];
 }
@@ -17,28 +16,20 @@ interface CarouselProps {
 const NextArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
     onClick={onClick}
-    className="slick-next absolute z-10 right-0 mr-6 cursor-pointer"
+    className="slick-next absolute z-10 right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
   >
-    {/* Ícone de seta para a direita (você pode substituir por um ícone SVG ou font icon) */}
-    <Image
-      className="min-h-14 min-w-16"
-      src={rigth}
-      alt="seta para direita"
-    ></Image>
+    {/* Ícone de seta para a direita */}
+    <Image className="h-6 w-6" src={rigth} alt="seta para direita" />
   </div>
 );
 
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
     onClick={onClick}
-    className="slick-prev absolute z-10 left-0 ml-1 cursor-pointer"
+    className="slick-prev absolute z-10 left-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
   >
     {/* Ícone de seta para a esquerda */}
-    <Image
-      className="min-h-14 min-w-16"
-      src={left}
-      alt="seta para esquerda"
-    ></Image>
+    <Image className="h-6 w-6" src={left} alt="seta para esquerda" />
   </div>
 );
 
@@ -61,21 +52,20 @@ const Carousel: React.FC<CarouselProps> = ({ cards }) => {
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 768,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          initialSlide: 1,
         },
       },
     ],
   };
 
   return (
-    <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 mt-8">
       <Slider {...settings}>
         {cards.map((card, index) => (
-          <div key={index} className="px-6 mx-2  mt-4">
+          <div key={index} className="px-4">
             <CardComponent {...card} />
           </div>
         ))}

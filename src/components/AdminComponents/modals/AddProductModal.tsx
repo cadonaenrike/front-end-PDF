@@ -42,12 +42,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
     "Física",
     "Geografia",
     "História",
-    "Humanidade e Ciências Sociais",
     "Inglês",
     "Língua Portuguesa",
     "Matemática",
-    "Metodologia Ativas",
-    "Projeto de vida",
     "Química",
     "Sociologia",
   ];
@@ -76,17 +73,17 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-  
+
     const partSize = 1024 * 1024 * 4; // 4 MB por parte
     const nomeArquivo = pdfFile?.name || "";
     const totalParts = Math.ceil(pdfFile!.size / partSize || 0);
-  
+
     const uploadPdfInParts = async (file: File) => {
       for (let i = 0; i < totalParts; i++) {
         const start = i * partSize;
         const end = Math.min(start + partSize, file.size);
         const part = file.slice(start, end);
-  
+
         const formData = new FormData();
         formData.append("part", part);
         formData.append("partIndex", i.toString());
@@ -98,25 +95,28 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
         formData.append("nivel_ensino", nivelEnsino);
         formData.append("valor", valor.replace("R$", "").trim());
         formData.append("componente_curricular", componenteCurricular);
-  
+
         // Adiciona as fotos apenas na primeira parte
         if (i === 0 && fotoFiles) {
           Array.from(fotoFiles).forEach((file) => {
             formData.append("fotos", file);
           });
         }
-  
+
         try {
-          await fetch('https://back-eight-chi.vercel.app/adicionar-produto-v2', {
-            method: "POST",
-            headers: {
-              "api-key": "tpfTech", // Use sua chave de API
-            },
-            body: formData,
-          });
-  
+          await fetch(
+            "https://back-eight-chi.vercel.app/adicionar-produto-v2",
+            {
+              method: "POST",
+              headers: {
+                "api-key": "tpfTech", // Use sua chave de API
+              },
+              body: formData,
+            }
+          );
+
           console.log(`Parte ${i + 1} de ${totalParts} enviada com sucesso`);
-  
+
           // Atualiza o progresso do upload
           setUploadProgress(((i + 1) / totalParts) * 100);
         } catch (error) {
@@ -125,7 +125,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
           return;
         }
       }
-  
+
       console.log("Upload completo");
       toast.success("Produto Cadastrado com sucesso!");
       setLoading(false);
@@ -141,7 +141,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
       setPdfFile(null);
       setFotoFiles(null);
     };
-  
+
     if (pdfFile) {
       uploadPdfInParts(pdfFile);
     } else {
@@ -149,7 +149,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
       setLoading(false);
     }
   };
-  
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -288,15 +287,21 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
             >
               Nível de Ensino
             </label>
-            <input
-              type="text"
+            <select
               id="nivelEnsino"
               name="nivelEnsino"
               value={nivelEnsino}
               onChange={(e) => setNivelEnsino(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               required
-            />
+            >
+              <option value="" disabled>
+                Selecione o nível de ensino
+              </option>
+              <option value="Ensino Fundamental">Ensino Fundamental</option>
+              <option value="Ensino Médio">Ensino Médio</option>
+              <option value="Eletivas">Eletivas</option>
+            </select>
           </div>
           <div>
             <label

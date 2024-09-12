@@ -14,7 +14,7 @@ const CardComponent: React.FC<ProductData> = ({
 }) => {
   return (
     <Link href={`/page_Product?id=${id}`} passHref>
-      <div className="flex max-h-[500px] flex-col border items-center justify-center rounded shadow-lg p-3 m-3 cursor-pointer">
+      <div className="flex flex-col max-h-[500px] border items-center justify-center rounded shadow-lg p-3 m-3 cursor-pointer w-full sm:w-64">
         {imageSrc && (
           <Image
             objectFit="contain"
@@ -23,10 +23,10 @@ const CardComponent: React.FC<ProductData> = ({
             alt={imageAlt || "Product Image"}
             width={300}
             height={300}
-            className="w-60 h-52 object-contain"
+            className="w-full h-52 object-contain"
           />
         )}
-        <div className="flex py-1 flex-col px-3">
+        <div className="flex py-1 flex-col px-3 w-full">
           <div className="flex flex-col overflow-y-auto max-h-24 my-1">
             <p className="text-black font-jost text-lg font-extrabold leading-5">
               {title}

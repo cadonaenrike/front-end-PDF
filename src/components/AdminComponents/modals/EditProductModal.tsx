@@ -252,15 +252,21 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             >
               Nível de Ensino
             </label>
-            <input
-              type="text"
+            <select
               id="nivelEnsino"
               name="nivelEnsino"
               value={nivelEnsino}
               onChange={(e) => setNivelEnsino(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               required
-            />
+            >
+              <option value="" disabled>
+                Selecione o nível de ensino
+              </option>
+              <option value="Ensino Fundamental">Ensino Fundamental</option>
+              <option value="Ensino Médio">Ensino Médio</option>
+              <option value="Eletivas">Eletivas</option>
+            </select>
           </div>
           <div>
             <label
