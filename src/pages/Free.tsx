@@ -16,7 +16,7 @@ const AmostraGratis: NextPage = () => {
       <main className="flex flex-col items-center mt-40 w-full flex-1 px-8 text-left">
         <h1 className="text-3xl font-bold mb-6 text-start">Amostra gratis</h1>
 
-        <p className="text-lg leading-relaxed mb-4">Virou Remedio?</p>
+        {/* <p className="text-lg leading-relaxed mb-4">Virou Remedio?</p> */}
       </main>
     </div>
   );
