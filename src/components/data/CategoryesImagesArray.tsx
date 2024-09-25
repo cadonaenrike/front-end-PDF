@@ -79,4 +79,9 @@ export const categories = [
     path: "/categories?category=Sociologia",
     image: Sociologia,
   },
+  {
+    name: "Eletiva",
+    path: "/categories?category=Eletiva",
+    image: ProjetoVida,
+  },
 ];

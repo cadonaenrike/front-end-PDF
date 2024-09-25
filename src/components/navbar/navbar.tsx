@@ -15,14 +15,14 @@ const NavBar = () => {
             Home
           </Link>
           <span className="text-gray-300">|</span>
-          <Link
+          {/* <Link
             className="font-normal text-black text-xl hover:text-blue-500"
             href="/categories"
             aria-current="page"
           >
             Categorias
-          </Link>
-          <span className="text-gray-300">|</span>
+          </Link> */}
+          {/* <span className="text-gray-300">|</span> */}
           <Link
             className="font-normal text-black text-xl hover:text-blue-500"
             href="/AboutCompany"
@@ -38,8 +38,8 @@ const NavBar = () => {
           >
             Amostra Grátis
           </Link>
-          <span className="text-gray-300">|</span>
-          <Link
+          {/* <span className="text-gray-300">|</span> */}
+          {/* <Link
             className="font-normal text-black text-xl hover:text-blue-500"
             href="/categories"
             aria-current="page"
@@ -61,7 +61,7 @@ const NavBar = () => {
             aria-current="page"
           >
             Eletivas
-          </Link>
+          </Link> */}
         </div>
       </div>
     </nav>

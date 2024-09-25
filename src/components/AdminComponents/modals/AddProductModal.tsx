@@ -47,6 +47,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
     "Matemática",
     "Química",
     "Sociologia",
+    "Eletivas",
   ];
 
   const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +59,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
   };
 
   const formatCurrency = (value: string) => {
-    const cleanValue = value.replace(/\D/g, ""); // Remove tudo que não for dígito
+    const cleanValue = value.replace(/\D/g, "");
     const formattedValue = (Number(cleanValue) / 100).toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
@@ -263,23 +264,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
               ))}
             </select>
           </div>
-          <div>
-            <label
-              htmlFor="componenteCurricular"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Componente Curricular
-            </label>
-            <input
-              type="text"
-              id="componenteCurricular"
-              name="componenteCurricular"
-              value={componenteCurricular}
-              onChange={(e) => setComponenteCurricular(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
+
           <div>
             <label
               htmlFor="nivelEnsino"
@@ -300,7 +285,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
               </option>
               <option value="Ensino Fundamental">Ensino Fundamental</option>
               <option value="Ensino Médio">Ensino Médio</option>
-              <option value="Eletivas">Eletivas</option>
             </select>
           </div>
           <div>

@@ -50,12 +50,10 @@ const Filters: React.FC<FiltersProps> = ({
     { name: "Física", icon: Fisica },
     { name: "Geografia", icon: Geografia },
     { name: "História", icon: Historia },
-    { name: "Humanidade e Ciências Sociais", icon: Humanidade },
     { name: "Inglês", icon: Ingles },
     { name: "Língua Portuguesa", icon: LinguaPortuguesa },
     { name: "Matemática", icon: Matematica },
-    { name: "Metodologia Ativas", icon: MetodologiaAtivas },
-    { name: "Projeto de vida", icon: ProjetoVida },
+    { name: "Eletiva", icon: ProjetoVida },
     { name: "Química", icon: Quimica },
     { name: "Sociologia", icon: Sociologia },
   ];
