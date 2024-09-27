@@ -10,7 +10,6 @@ const ProductPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const [product, setProduct] = useState<ProductData | null>(null);
-  const [quantity, setQuantity] = useState(1);
   const [cards, setCards] = useState<ProductData[]>([]);
 
   useEffect(() => {
@@ -48,6 +47,7 @@ const ProductPage = () => {
           const mappedProduct: ProductData = {
             id: fetchedProduct.id.toString(),
             title: fetchedProduct.nome_produto,
+            nivelEnsino: fetchedProduct.nivel_ensino,
             description: fetchedProduct.descricao,
             price: parseFloat(fetchedProduct.valor),
             link: "/categories",
@@ -66,6 +66,13 @@ const ProductPage = () => {
       fetchProduct();
     }
   }, [id]);
+
+  const addToCart = (product: ProductData) => {
+    const cartItems = JSON.parse(sessionStorage.getItem("cart") || "[]");
+    const updatedCart = [...cartItems, { ...product }];
+    sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+    alert("Produto adicionado ao carrinho!");
+  };
 
   if (!product) {
     return (
@@ -104,33 +111,23 @@ const ProductPage = () => {
               ))}
             </div>
           </div>
-          <div className="mt-4">
-            <label htmlFor="quantity" className="block text-sm font-medium">
-              Quantidade
-            </label>
-            <select
-              id="quantity"
-              name="quantity"
-              value={quantity}
-              onChange={(e) => setQuantity(parseInt(e.target.value))}
-              className="mt-1 block w-20 p-2 border-gray-300 rounded"
-            >
-              {[1, 2, 3, 4, 5].map((q) => (
-                <option key={q} value={q}>
-                  {q}
-                </option>
-              ))}
-            </select>
-          </div>
           <p className="text-gray-500 mt-4">
             <strong>Estoque:</strong> Disponível
           </p>
           <div className="mt-6 space-y-4">
-            <button className="w-full bg-blue-500 text-white py-2 px-4 rounded">
-              Comprar
-            </button>
-            <button className="w-full bg-white text-blue-500 border border-blue-500 py-2 px-4 rounded">
+            <button
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded"
+              onClick={() => addToCart(product)}
+            >
               Adicionar ao Carrinho
+            </button>
+            <button
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded"
+              onClick={() => {
+                router.push("/Cart");
+              }}
+            >
+              Comprar
             </button>
           </div>
         </div>

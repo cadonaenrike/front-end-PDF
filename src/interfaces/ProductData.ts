@@ -4,6 +4,7 @@ export interface ProductData {
   description: string;
   price: number;
   link: string;
+  nivelEnsino: string;
   imageSrc: string;
   imageAlt: string;
   category: string;
