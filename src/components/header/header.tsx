@@ -43,7 +43,7 @@ const Header = () => {
                 {/* Search Icon */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-700" // Define um tamanho adequado para o ícone
+                  className="h-5 w-5 text-gray-700"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -105,7 +105,7 @@ const Header = () => {
           </Link>
 
           {/* Cart Icon */}
-          <Link href={"/"}>
+          <Link href={"/Cart"}>
             <div className="flex items-center p-2 bg-gray-200 border border-gray-200 shadow-sm rounded-lg">
               <svg
                 className="mr-2"

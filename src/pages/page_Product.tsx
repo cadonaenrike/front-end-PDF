@@ -5,6 +5,7 @@ import { ProductData } from "@/interfaces/ProductData";
 import { getAllProducts, getProductById } from "./api/LIbraryApi";
 import { FaStar } from "react-icons/fa";
 import Carousel from "@/components/carrosel/carrosel";
+import { toast } from "react-toastify";
 
 const ProductPage = () => {
   const router = useRouter();
@@ -71,7 +72,12 @@ const ProductPage = () => {
     const cartItems = JSON.parse(sessionStorage.getItem("cart") || "[]");
     const updatedCart = [...cartItems, { ...product }];
     sessionStorage.setItem("cart", JSON.stringify(updatedCart));
-    alert("Produto adicionado ao carrinho!");
+    toast.success("Produto adicionado ao carrinho!");
+  };
+
+  const BuyandCart = (product: ProductData) => {
+    addToCart(product); // Adiciona o produto ao carrinho
+    router.push("/Cart"); // Redireciona para a página do carrinho
   };
 
   if (!product) {
@@ -101,11 +107,11 @@ const ProductPage = () => {
             />
           </div>
         </div>
-        <div className="w-full md:w-[35%] lg:w-[40%] md:ml-8 mt-4 md:mt-0">
+        <div className="w-full text-center md:text-start md:w-[35%] lg:w-[40%] md:ml-8 mt-4 md:mt-0">
           <h1 className="text-2xl font-semibold">{product.title}</h1>
           <p className="text-gray-600 mt-2">Código: {product.id}</p>
-          <div className="flex items-center mt-2">
-            <div className="flex space-x-1">
+          <div className="flex items-center justify-center md:justify-start mt-2">
+            <div className="flex  space-x-1">
               {[...Array(5)].map((_, i) => (
                 <FaStar key={i} className="text-amber-500" />
               ))}
@@ -114,20 +120,20 @@ const ProductPage = () => {
           <p className="text-gray-500 mt-4">
             <strong>Estoque:</strong> Disponível
           </p>
-          <div className="mt-6 space-y-4">
+          <div className="mt-14 flex flex-col gap-4 justify-center items-center">
             <button
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded"
-              onClick={() => addToCart(product)}
-            >
-              Adicionar ao Carrinho
-            </button>
-            <button
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded"
+              className="w-[60%] bg-blue-800 text-white font-extrabold py-2 px-4 rounded"
               onClick={() => {
-                router.push("/Cart");
+                BuyandCart(product);
               }}
             >
               Comprar
+            </button>
+            <button
+              className="w-[60%] border-2 border-blue-800 font-extrabold text-blue-800 py-2 px-4 rounded"
+              onClick={() => addToCart(product)}
+            >
+              Adicionar ao Carrinho
             </button>
           </div>
         </div>
@@ -135,17 +141,17 @@ const ProductPage = () => {
 
       {/* Descrição */}
       <div className="w-full flex flex-col my-12">
-        <h2 className="text-center font-jost text-4xl md:text-5xl mb-12 font-semibold">
+        <h2 className="text-center font-jost text-xl md:text-lg mb-12 font-semibold">
           Descrição
         </h2>
-        <p className="text-gray-700 text-lg md:text-2xl mt-4">
+        <p className="text-center text-gray-700 text-lg md:text-xl mt-4">
           {product.description}
         </p>
       </div>
 
       {/* Produtos Relacionados */}
       <div className="p-4 mt-20">
-        <h2 className="text-black text-center font-jost text-4xl md:text-5xl font-semibold mb-6">
+        <h2 className="text-black text-center font-jost text-lg md:text-xl font-semibold mb-6">
           Produtos Relacionados
         </h2>
         <div className="mx-auto px-4 sm:px-2 md:px-8 lg:px-20 xl:px-40">

@@ -7,9 +7,9 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer className="bg-blue-600 w-full h-full px-2 flex flex-col gap-2 text-white py-10">
-      <div className="w-full  flex justify-around items-center">
+      <div className="w-full  flex  justify-around items-center">
         {/* Logo e links */}
-        <div className="flex items-center flex-col md:flex-row gap-4">
+        <div className="flex items-center flex-col md:flex-row  gap-4">
           <Image
             src={logo}
             alt="Caça Palavras Didáticos"
@@ -21,7 +21,7 @@ const Footer = () => {
         </div>
         <div className="flex items-center ">
           {/* Cascata de links ao lado do logo */}
-          <div className="flex flex-col text-sm md:ml-10 pl-36 space-y-2">
+          <div className="flex flex-col text-sm md:ml-10 md:pl-36 space-y-2">
             <Link href="/site-protection" className="text-xs mb-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

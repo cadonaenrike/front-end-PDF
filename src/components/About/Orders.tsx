@@ -7,12 +7,55 @@ import { fetchOrderData } from "@/pages/api/OrderApi";
 const Orders = () => {
   const [orders, setOrders] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Função para traduzir o tipo de pagamento
+  const translatePaymentType = (billingType: string) => {
+    switch (billingType) {
+      case "CREDIT_CARD":
+        return "Cartão de Crédito";
+      case "PIX":
+        return "PIX";
+      case "BOLETO":
+        return "Boleto";
+      default:
+        return "Outro";
+    }
+  };
+
+  // Função para traduzir o status
+  const translateStatus = (status: string) => {
+    switch (status) {
+      case "CONFIRMED":
+        return "Confirmado";
+      case "PENDING":
+        return "Pendente";
+      case "CANCELLED":
+        return "Cancelado";
+      default:
+        return "Outro";
+    }
+  };
+
+  // Função para formatar data no formato dia/mês/ano
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR");
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchOrderData();
-        setOrders(data);
+        const response = await fetchOrderData();
+
+        const formattedData = response.map((order: any) => ({
+          id: order.id,
+          dataHora: formatDate(order.clientPaymentDate || order.confirmedDate),
+          pagamento: translatePaymentType(order.billingType),
+          status: translateStatus(order.status),
+          valor: `R$ ${order.value.toFixed(2)}`,
+        }));
+
+        setOrders(formattedData);
         setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar dados:", error);

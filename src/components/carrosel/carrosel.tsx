@@ -19,7 +19,7 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     className="slick-next absolute z-10 right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
   >
     {/* Ícone de seta para a direita */}
-    <Image className="h-6 w-6" src={rigth} alt="seta para direita" />
+    <Image className="h-6 w-8" src={rigth} alt="seta para direita" />
   </div>
 );
 
@@ -29,7 +29,7 @@ const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
     className="slick-prev absolute z-10 left-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
   >
     {/* Ícone de seta para a esquerda */}
-    <Image className="h-6 w-6" src={left} alt="seta para esquerda" />
+    <Image className="h-6 w-8" src={left} alt="seta para esquerda" />
   </div>
 );
 

@@ -47,7 +47,7 @@ const Home = () => {
   }
 
   return (
-    <div className="">
+    <div className="w-full h-full overflow-hidden">
       {/* Header */}
       <div className="w-full">
         <Image
@@ -63,7 +63,7 @@ const Home = () => {
         <h2 className="text-black text-center font-jost text-5xl font-semibold mb-6">
           Categorias
         </h2>
-        <div className="mx-auto px-4 sm:px-2 md:px-8 lg:px-20 xl:px-40 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="mx-auto px-2 sm:px-2 md:px-8 lg:px-20 xl:px-40 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {categories.map((category, index) => (
             <Link key={index} href={category.path}>
               <CategoryButton
@@ -81,7 +81,7 @@ const Home = () => {
         <h2 className="text-black text-center font-jost text-5xl font-semibold mb-6">
           Diferencial
         </h2>
-        <p className="text-xl pb-12 font-medium text-gray-500">
+        <p className="text-center md:text-start text-xl pb-12 font-medium text-gray-500">
           Conheça o nosso diferencial das outras plataformas
         </p>
 

@@ -2,90 +2,19 @@ import React, { useState, useEffect } from "react";
 import { ProductData } from "@/interfaces/ProductData";
 import Image from "next/image";
 import { FaTrash } from "react-icons/fa";
-import Pusher from "pusher-js";
-import { payment, paymentOK } from "./api/cartApi";
+import { payment } from "./api/cartApi"; // API de pagamento
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const CartPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<ProductData[]>([]);
   const [billingType, setBillingType] = useState("PIX");
-  const [paymentStatus, setPaymentStatus] = useState<string>("PENDING");
+  const router = useRouter();
 
   useEffect(() => {
     const storedCartItems = JSON.parse(sessionStorage.getItem("cart") || "[]");
     setCartItems(storedCartItems);
   }, []);
-
-  // Função para conectar ao Pusher e escutar os eventos de pagamento confirmados
-  const connectPusher = () => {
-    console.log("Iniciando a conexão com o Pusher...");
-
-    const pusher = new Pusher("24965af3729f79c3ae48", {
-      cluster: "sa1",
-    });
-
-    // Verifica se a conexão está aberta
-    pusher.connection.bind("connected", () => {
-      console.log("Conectado ao Pusher com sucesso!");
-    });
-
-    // Captura qualquer erro durante a conexão
-    pusher.connection.bind("error", (err: any) => {
-      console.error("Erro na conexão com o Pusher:", err);
-    });
-
-    // Inscrever-se no canal 'payments-channel'
-    const channel = pusher.subscribe("payments-channel");
-
-    // Verifica se a inscrição no canal foi bem-sucedida
-    channel.bind("pusher:subscription_succeeded", () => {
-      console.log("Inscrito com sucesso no canal payments-channel");
-    });
-
-    // Verifica se há erros na inscrição no canal
-    channel.bind("pusher:subscription_error", (status: any) => {
-      console.error("Erro na inscrição no canal payments-channel:", status);
-    });
-
-    // Ouvir o evento 'payment-confirmed'
-    channel.bind("payment-confirmed", async (data: any) => {
-      console.log("Evento payment-confirmed recebido:", data);
-
-      // Enviar os IDs dos produtos para o backend
-      const jwtToken = sessionStorage.getItem("jwt");
-      if (!jwtToken) {
-        alert("Usuário não autenticado!");
-        return;
-      }
-
-      // Extrair o ID do usuário a partir do JWT
-      const decodedToken = JSON.parse(atob(jwtToken.split(".")[1])); // Decodifica a parte útil do token JWT
-      const userId = decodedToken.usuario.id;
-      try {
-        await paymentOK({
-          productIds: cartItems.map((item) => item.id),
-          clientId: userId,
-          paymentId: data.paymentId,
-        });
-
-        // Atualize o status do pagamento com os dados recebidos
-        setPaymentStatus("CONFIRMED");
-        alert(
-          `Pagamento confirmado! Cliente: ${data.clientId}, Pagamento: ${data.paymentId}, Valor: ${data.value}`
-        );
-
-        // Limpar o carrinho
-        setCartItems([]);
-        sessionStorage.removeItem("cart");
-      } catch (error) {
-        console.error("Erro ao enviar IDs dos produtos para o backend:", error);
-      }
-    });
-
-    // Bind para qualquer problema de desconexão
-    pusher.connection.bind("disconnected", () => {
-      console.log("Pusher desconectado.");
-    });
-  };
 
   const removeItem = (index: number) => {
     const updatedCart = [...cartItems];
@@ -97,23 +26,32 @@ const CartPage: React.FC = () => {
   const handlePayment = async () => {
     const jwtToken = sessionStorage.getItem("jwt");
     if (!jwtToken) {
-      alert("Usuário não autenticado!");
+      toast.error("Usuário não autenticado!");
       return;
     }
 
     // Extrair o ID do usuário a partir do JWT
-    const decodedToken = JSON.parse(atob(jwtToken.split(".")[1])); // Decodifica a parte útil do token JWT
+    const decodedToken = JSON.parse(atob(jwtToken.split(".")[1]));
     const userId = decodedToken.usuario.id;
 
     // Preparar os dados do pagamento
     const data = {
       billingType,
       value: totalAmount,
-      dueDate: new Date(Date.now() + 86400000).toISOString().split("T")[0], // Um dia após a data atual
+      dueDate: new Date(Date.now() + 86400000).toISOString().split("T")[0], // Data de vencimento para o próximo dia
       description: "Pagamento de produtos",
-      idProduto: cartItems.map((item) => item.id), // IDs dos produtos
-      idUsuario: userId, // ID do usuário
+      idProduto: cartItems.map((item) => item.id),
+      idUsuario: userId,
     };
+
+    // Salvar os dados do pagamento no sessionStorage
+    sessionStorage.setItem(
+      "paymentData",
+      JSON.stringify({
+        productIds: cartItems.map((item) => item.id),
+        clientId: userId,
+      })
+    );
 
     try {
       const response = await payment(decodedToken.usuario.cpf, data);
@@ -121,15 +59,14 @@ const CartPage: React.FC = () => {
         // Abrir o link da fatura em uma nova aba
         window.open(response.resultado.invoiceUrl, "_blank");
 
-        // Conecta ao Pusher para escutar a confirmação do pagamento
-        connectPusher();
-        console.log("Pagamento realizado com sucesso:", response);
+        // Redirecionar para a página de confirmação de pagamento
+        router.push("/ConfirmPayment");
       } else {
-        alert("Erro ao obter o link de pagamento.");
+        toast.error("Erro ao obter o link de pagamento.");
       }
     } catch (error) {
       console.error("Erro ao processar o pagamento:", error);
-      alert("Erro ao processar o pagamento!");
+      toast.error("Erro ao processar o pagamento!");
     }
   };
 
@@ -189,32 +126,32 @@ const CartPage: React.FC = () => {
             <div className="lg:col-span-4">
               <div className="border p-4 rounded-md">
                 <h2 className="text-xl font-semibold mb-4">
-                  Escolha a sua forma de entrega
+                  Escolha a sua forma de pagamento
                 </h2>
                 <div className="space-y-2">
                   <div>
                     <input
                       type="radio"
-                      id="email"
+                      id="pix"
                       name="billingType"
                       value="PIX"
                       checked={billingType === "PIX"}
                       onChange={() => setBillingType("PIX")}
                       className="mr-2"
                     />
-                    <label htmlFor="email">Pagamento via PIX</label>
+                    <label htmlFor="pix">Pagamento via PIX</label>
                   </div>
                   <div>
                     <input
                       type="radio"
-                      id="plataforma"
+                      id="creditCard"
                       name="billingType"
                       value="CREDIT_CARD"
                       checked={billingType === "CREDIT_CARD"}
                       onChange={() => setBillingType("CREDIT_CARD")}
                       className="mr-2"
                     />
-                    <label htmlFor="plataforma">
+                    <label htmlFor="creditCard">
                       Pagamento via Cartão de Crédito
                     </label>
                   </div>
@@ -233,11 +170,6 @@ const CartPage: React.FC = () => {
                 </button>
               </div>
             </div>
-          </div>
-
-          {/* Exibe o status do pagamento */}
-          <div className="mt-4">
-            <p>Status do pagamento: {paymentStatus}</p>
           </div>
         </>
       )}
