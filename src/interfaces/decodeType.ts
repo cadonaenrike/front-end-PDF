@@ -6,6 +6,8 @@ export interface Usuario {
   senha: string;
   datanascimento: string;
   email: string;
+  admin: boolean;
+  compras: string[];
   cpf: string;
   telefonecelular: string;
   sexo: string | null;

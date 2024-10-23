@@ -63,8 +63,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
     const formattedValue = (Number(cleanValue) / 100).toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
+      minimumFractionDigits: 2, // Garante 2 casas decimais
     });
-    return formattedValue;
+    return formattedValue.replace(/\./g, "");
   };
 
   const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {

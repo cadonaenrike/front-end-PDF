@@ -7,7 +7,6 @@ export default function decryptJwt(): DecodedToken | null {
   if (token) {
     try {
       const decodedToken: DecodedToken = jwt.decode(token) as DecodedToken;
-      console.log(decodedToken);
       return decodedToken;
     } catch (error) {
       console.error("Erro ao decodificar o token JWT:", error);

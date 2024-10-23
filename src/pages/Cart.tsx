@@ -58,9 +58,6 @@ const CartPage: React.FC = () => {
       if (response && response.resultado && response.resultado.invoiceUrl) {
         // Abrir o link da fatura em uma nova aba
         window.open(response.resultado.invoiceUrl, "_blank");
-
-        // Redirecionar para a página de confirmação de pagamento
-        router.push("/ConfirmPayment");
       } else {
         toast.error("Erro ao obter o link de pagamento.");
       }

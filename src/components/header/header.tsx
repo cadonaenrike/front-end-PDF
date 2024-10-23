@@ -8,6 +8,7 @@ import decryptJwt from "../decripted/decript";
 
 const Header = () => {
   const [userData, setUserData] = useState<any>(null);
+  const [admin, setAdmin] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -20,11 +21,13 @@ const Header = () => {
 
           if (decodedToken) {
             setUserData(decodedToken);
+            setAdmin(decodedToken.usuario.admin);
           }
         }
       }, 4000);
     }
   }, []);
+console.log(admin)
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b-4 border-blue-800">
       <nav className="flex items-center justify-between w-full px-4 py-2.5 md:py-4 lg:px-8 mx-auto max-w-screen-2xl">
@@ -136,34 +139,36 @@ const Header = () => {
             </div>
           </Link>
           {/* Cart Icon */}
-          <Link href={"/Admin"}>
-            <div className="flex items-center p-2 bg-gray-200 border border-gray-200 shadow-sm rounded-lg">
-              <svg
-                className="mr-2"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M7 6C7 3.23858 9.23858 1 12 1C14.7614 1 17 3.23858 17 6C17 8.76142 14.7614 11 12 11C9.23858 11 7 8.76142 7 6ZM12 3C10.3431 3 9 4.34315 9 6C9 7.65685 10.3431 9 12 9C13.6569 9 15 7.65685 15 6C15 4.34315 13.6569 3 12 3Z"
-                  fill="black"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M2 22C2 16.4772 6.47715 12 12 12C17.5228 12 22 16.4772 22 22V23H2V22ZM4.06189 21H19.9381C19.446 17.0537 16.0796 14 12 14C7.92038 14 4.55399 17.0537 4.06189 21Z"
-                  fill="black"
-                />
-              </svg>
-              <span className="text-neutral-700 text-sm whitespace-nowrap">
-                Admin
-              </span>
-            </div>
-          </Link>
+          {admin && (
+            <Link href={"/Admin"}>
+              <div className="flex items-center p-2 bg-gray-200 border border-gray-200 shadow-sm rounded-lg">
+                <svg
+                  className="mr-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M7 6C7 3.23858 9.23858 1 12 1C14.7614 1 17 3.23858 17 6C17 8.76142 14.7614 11 12 11C9.23858 11 7 8.76142 7 6ZM12 3C10.3431 3 9 4.34315 9 6C9 7.65685 10.3431 9 12 9C13.6569 9 15 7.65685 15 6C15 4.34315 13.6569 3 12 3Z"
+                    fill="black"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M2 22C2 16.4772 6.47715 12 12 12C17.5228 12 22 16.4772 22 22V23H2V22ZM4.06189 21H19.9381C19.446 17.0537 16.0796 14 12 14C7.92038 14 4.55399 17.0537 4.06189 21Z"
+                    fill="black"
+                  />
+                </svg>
+                <span className="text-neutral-700 text-sm whitespace-nowrap">
+                  Admin
+                </span>
+              </div>
+            </Link>
+          )}
         </div>
       </nav>
     </header>
