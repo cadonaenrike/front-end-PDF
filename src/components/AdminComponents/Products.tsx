@@ -8,7 +8,7 @@ import ConfirmDeleteModal from "./modals/DeleteProductModal";
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState<ProductAdmin[]>([]);
-  const [loading, setLoading] = useState(true); // Estado de carregamento
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -18,7 +18,7 @@ const Products = () => {
       } catch (error) {
         console.error("Erro ao carregar produtos", error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -52,81 +52,86 @@ const Products = () => {
   );
 
   return (
-    <div className="p-6 ">
-      <div className="w-full flex justify-between">
-        <h1 className="text-2xl font-bold mb-4">Produtos</h1>
+    <div className="p-4 md:p-6">
+      <div className="w-full flex flex-col md:flex-row justify-between mb-4">
+        <h1 className="text-xl md:text-2xl font-bold mb-4 md:mb-0">Produtos</h1>
         <input
           type="text"
-          placeholder="Buscar produto por nome ou categoria "
+          placeholder="Buscar produto por nome ou categoria"
           value={searchTerm}
           onChange={handleSearch}
-          className="border rounded-md bg-gray-200 text-black p-2 w-1/3"
+          className="border rounded-md bg-gray-200 text-black p-2 w-full md:w-1/3"
         />
       </div>
-      <div className="w-full  flex justify-end my-4">
+      <div className="w-full flex justify-end mb-4">
         <AddProductModal triggerUpdate={triggerUpdate} />
       </div>
+
+      {/* Tabela Responsiva */}
       <div className="overflow-x-auto">
         {loading ? (
           <div className="text-center p-6">
             <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
-            <p className="mt-2 text-gray-500">Carregando produtos...</p>
+            <p className="mt-2 text-gray-500">Carregando...</p>
           </div>
         ) : (
-          <table className="min-w-full bg-white border rounded-lg">
-            <thead>
-              <tr>
-                <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Produto
-                </th>
-                <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Categoria
-                </th>
-                <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Valor
-                </th>
-                <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Ações
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProducts.map((product) => (
-                <tr key={product.id}>
-                  <td className="px-6 py-4 whitespace-nowrap border-b">
-                    <span className="text-sm font-medium text-gray-900">
-                      {product.nome_produto}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap border-b">
-                    <span className="text-sm text-gray-500">
-                      {product.categoria}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap border-b">
-                    <span className="text-sm text-gray-500">{`R$ ${parseFloat(
-                      product.valor
-                    )
-                      .toFixed(2)
-                      .replace(".", ",")}`}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap border-b">
-                    <div className="flex space-x-4">
-                      <EditProductModal
-                        product={product}
-                        triggerUpdate={triggerUpdate}
-                      />
-                      <ConfirmDeleteModal
-                        productId={product.id}
-                        productName={product.nome_produto}
-                        triggerUpdate={triggerUpdate}
-                      />
-                    </div>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border rounded-lg">
+              <thead>
+                <tr>
+                  <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    Produto
+                  </th>
+                  <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    Categoria
+                  </th>
+                  <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    Valor
+                  </th>
+                  <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    Ações
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredProducts.map((product) => (
+                  <tr key={product.id}>
+                    <td className="px-6 py-4 whitespace-nowrap border-b">
+                      <span className="text-sm font-medium text-gray-900">
+                        {product.nome_produto}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap border-b">
+                      <span className="text-sm text-gray-500">
+                        {product.categoria}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap border-b">
+                      <span className="text-sm text-gray-500">{`R$ ${parseFloat(
+                        product.valor
+                      )
+                        .toFixed(2)
+                        .replace(".", ",")}`}</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap border-b">
+                      <div className="flex flex-wrap gap-2">
+                        <EditProductModal
+                          product={product}
+                          triggerUpdate={triggerUpdate}
+                        />
+                        <ConfirmDeleteModal
+                          productId={product.id}
+                          productName={product.nome_produto}
+                          triggerUpdate={triggerUpdate}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
         )}
       </div>
     </div>

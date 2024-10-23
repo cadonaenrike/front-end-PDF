@@ -27,9 +27,10 @@ const Library = () => {
       <h2 className="text-2xl font-bold mb-6">Minha Biblioteca</h2>
       <div className="bg-white p-6 rounded-lg border-2">
         {loading ? (
-          <h1 className="text-center text-2xl text-black font-bold">
-            Loading...
-          </h1>
+          <div className=" text-center p-6">
+            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
+            <p className="mt-2 text-gray-500">Carregando...</p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {cards.map((card, index) => (

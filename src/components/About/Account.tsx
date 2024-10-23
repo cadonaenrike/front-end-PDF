@@ -52,9 +52,10 @@ const Account = () => {
       <h2 className="text-2xl font-bold mb-6">Minha Conta</h2>
       <div className="border-2 rounded-xl py-5">
         {loading ? (
-          <div className="text-center text-2xl text-black font-bold">
-            Loading...
-          </div>
+          <div className=" text-center p-6">
+          <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
+          <p className="mt-2 text-gray-500">Carregando...</p>
+        </div>
         ) : (
           <>
             <div className="bg-white rounded-xl p-6">

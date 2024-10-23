@@ -116,8 +116,8 @@ const Finance = () => {
 
   return (
     <div className="p-6">
-      <div className="flex justify-end mb-4">
-        <div>
+      <div className="flex flex-col md:flex-row md:justify-end mb-4">
+        <div className="mb-4 md:mb-0 md:mr-4">
           <label
             htmlFor="start-date"
             className="block text-sm font-medium text-gray-700"
@@ -132,7 +132,7 @@ const Finance = () => {
             className="mt-1 p-2 border rounded-md w-full"
           />
         </div>
-        <div className="ml-4">
+        <div>
           <label
             htmlFor="end-date"
             className="block text-sm font-medium text-gray-700"
@@ -149,7 +149,7 @@ const Finance = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-gray-200 p-4 rounded-md text-center">
           <h3 className="text-sm font-medium text-gray-500">
             Quantidade de transações
@@ -189,8 +189,8 @@ const Finance = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={4} className="px-6 py-4 text-center">
-                  Carregando...
+                <td colSpan={4} className="text-center px-6 py-4">
+                  <p className="text-gray-500">Carregando...</p>
                 </td>
               </tr>
             ) : filteredTransactions.length > 0 ? (

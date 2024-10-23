@@ -59,7 +59,10 @@ const Users = () => {
       </div>
 
       {loading ? (
-        <div className="text-center">Carregando...</div>
+        <div className=" text-center p-6">
+        <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
+        <p className="mt-2 text-gray-500">Carregando...</p>
+      </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border rounded-lg">

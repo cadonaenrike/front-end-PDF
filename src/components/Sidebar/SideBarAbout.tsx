@@ -19,7 +19,7 @@ const SidebarAbout: React.FC<SidebarProps> = ({
   };
 
   return (
-    <div className="w-1/5 h-screen mt-8 bg-white ">
+    <div className="md:w-1/5 md:h-screen mt-8 bg-white ">
       <nav className="mt-4 mx-4">
         <ul className="flex flex-col gap-4">
           <li

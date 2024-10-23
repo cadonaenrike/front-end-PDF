@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { OrderData } from "@/interfaces/OrderData";
-import { fetchOrderData, fetchOrderDataBycpf } from "@/pages/api/OrderApi";
+import { fetchOrderDataBycpf } from "@/pages/api/OrderApi";
 import decryptJwt from "../decripted/decript";
 
 const Orders = () => {
@@ -123,18 +123,25 @@ const Orders = () => {
   return (
     <div className="p-8">
       <h2 className="text-2xl font-bold mb-6">Meus Pedidos</h2>
-      <div className="bg-white p-6 border-2 rounded-xl">
-        <DataTable
-          columns={columns}
-          data={orders}
-          progressPending={loading}
-          noDataComponent="Nenhum pedido encontrado"
-          paginationComponentOptions={paginationComponentOptions}
-          paginationRowsPerPageOptions={[6, 10, 16, 20]}
-          paginationPerPage={6}
-          pagination
-        />
-      </div>
+      {loading ? (
+        <div className=" text-center p-6">
+          <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
+          <p className="mt-2 text-gray-500">Carregando...</p>
+        </div>
+      ) : (
+        <div className="bg-white p-6 border-2 rounded-xl">
+          <DataTable
+            columns={columns}
+            data={orders}
+            progressPending={loading}
+            noDataComponent="Nenhum pedido encontrado"
+            paginationComponentOptions={paginationComponentOptions}
+            paginationRowsPerPageOptions={[6, 10, 16, 20]}
+            paginationPerPage={6}
+            pagination
+          />
+        </div>
+      )}
     </div>
   );
 };

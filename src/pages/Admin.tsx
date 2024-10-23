@@ -44,12 +44,12 @@ const Admin = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row">
       <SidebarAdmin
         setActiveComponent={setActiveComponent}
         activeComponent={activeComponent}
       />
-      <div className="flex-grow p-6">{renderContent()}</div>
+      <div className="md:flex-grow p-6">{renderContent()}</div>
     </div>
   );
 };

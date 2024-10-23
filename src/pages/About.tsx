@@ -41,12 +41,12 @@ const About = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="w-full flex flex-col md:flex-row ">
       <Sidebar
         setActiveComponent={setActiveComponent}
         activeComponent={activeComponent}
       />
-      <div className="flex-grow p-6">{renderContent()}</div>
+      <div className="md:flex-grow p-6">{renderContent()}</div>
     </div>
   );
 };
