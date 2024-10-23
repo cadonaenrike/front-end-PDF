@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ProductData } from "@/interfaces/ProductData";
 import Image from "next/image";
 import { FaTrash } from "react-icons/fa";
+import { FiBookOpen } from "react-icons/fi";
 import { payment } from "./api/cartApi"; // API de pagamento
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
@@ -73,7 +74,21 @@ const CartPage: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 py-6">
       <h1 className="text-3xl font-semibold mb-8">Carrinho</h1>
       {cartItems.length === 0 ? (
-        <p>Seu carrinho está vazio.</p>
+        <div className="flex flex-col items-center justify-center py-16">
+          <FiBookOpen className="text-blue-600 w-40 h-40 mb-8" />
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Seu carrinho está vazio!
+          </h2>
+          <p className="text-gray-500 text-center text-lg mt-2">
+            Parece que você ainda não adicionou nenhum eBook ao seu carrinho.
+          </p>
+          <button
+            onClick={() => router.push("/categories")}
+            className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 transition-all"
+          >
+            Explorar eBooks
+          </button>
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
