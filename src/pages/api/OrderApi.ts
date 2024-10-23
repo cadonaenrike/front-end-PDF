@@ -9,3 +9,13 @@ export const fetchOrderData = async () => {
     throw error;
   }
 };
+export const fetchOrderDataBycpf = async (cpf: string) => {
+  console.log(cpf);
+  try {
+    const response = await api.get(`/list-payments-cpf/${cpf}`);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    throw error;
+  }
+};

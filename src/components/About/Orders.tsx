@@ -2,12 +2,14 @@
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { OrderData } from "@/interfaces/OrderData";
-import { fetchOrderData } from "@/pages/api/OrderApi";
+import { fetchOrderData, fetchOrderDataBycpf } from "@/pages/api/OrderApi";
+import decryptJwt from "../decripted/decript";
 
 const Orders = () => {
   const [orders, setOrders] = useState<OrderData[]>([]);
-  const [loading, setLoading] = useState(true);
-  
+  const [loading, setLoading] = useState<boolean>(true);
+  const [cpf, setCpf] = useState<string>("");
+
   // Função para traduzir o tipo de pagamento
   const translatePaymentType = (billingType: string) => {
     switch (billingType) {
@@ -36,17 +38,36 @@ const Orders = () => {
     }
   };
 
-  // Função para formatar data no formato dia/mês/ano
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR");
+    const correctedDate = new Date(
+      date.getTime() + date.getTimezoneOffset() * 60000
+    );
+    return correctedDate.toLocaleDateString("pt-BR");
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetchOrderData();
+    if (typeof window !== "undefined") {
+      // Verifica se o código está sendo executado no lado do cliente
+      setTimeout(() => {
+        const token = sessionStorage.getItem("jwt");
 
+        if (token) {
+          const decodedToken = decryptJwt();
+
+          if (decodedToken) {
+            setCpf(decodedToken.usuario.cpf);
+          }
+        }
+      }, 4000);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!cpf) return;
+      try {
+        const response = await fetchOrderDataBycpf(cpf);
         const formattedData = response.map((order: any) => ({
           id: order.id,
           dataHora: formatDate(order.clientPaymentDate || order.confirmedDate),
@@ -64,7 +85,7 @@ const Orders = () => {
     };
 
     fetchData();
-  }, []);
+  }, [cpf]);
 
   const columns = [
     {

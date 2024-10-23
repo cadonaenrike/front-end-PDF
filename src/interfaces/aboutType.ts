@@ -12,6 +12,8 @@ export interface AccountData {
   id: number;
   nome: string;
   senha: string;
+  admin: boolean;
+  compras: string[];
   datanascimento: string;
   email: string;
   cpf: string;

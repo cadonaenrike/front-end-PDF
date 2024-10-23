@@ -69,12 +69,13 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   };
 
   const formatCurrency = (value: string) => {
-    const cleanValue = value.replace(/\D/g, ""); // Remove tudo que não for dígito
+    const cleanValue = value.replace(/\D/g, "");
     const formattedValue = (Number(cleanValue) / 100).toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
+      minimumFractionDigits: 2,
     });
-    return formattedValue;
+    return formattedValue.replace(/\./g, "");
   };
 
   const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
