@@ -30,7 +30,7 @@ const Users = () => {
   };
 
   const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.cpf.includes(searchTerm)
   );
@@ -87,7 +87,7 @@ const Users = () => {
                 filteredUsers.map(user => (
                   <tr key={user.id}>
                     <td className="px-6 py-4 whitespace-nowrap border-b">
-                      <span className="text-sm font-medium text-gray-900">{user.name}</span>
+                      <span className="text-sm font-medium text-gray-900">{user.nome}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap border-b">
                       <span className="text-sm text-gray-500">{user.email}</span>
