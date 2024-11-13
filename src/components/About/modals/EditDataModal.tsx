@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { EditAbout } from "@/pages/api/about";
 import { DecodedToken } from "@/interfaces/decodeType";
 import decryptJwt from "@/components/decripted/decript";
+import InputMask from "react-input-mask";
 
 interface EditDataModalProps {
   triggerUpdate: () => void;
@@ -31,6 +32,7 @@ const EditDataModal: React.FC<EditDataModalProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [accountData, setAccountData] = useState<DecodedToken | null>(null);
+
   const fetchData = () => {
     try {
       const data = decryptJwt();
@@ -46,7 +48,7 @@ const EditDataModal: React.FC<EditDataModalProps> = ({
 
   console.log(accountData);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Evita o reload da página
+    event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
 
@@ -64,11 +66,10 @@ const EditDataModal: React.FC<EditDataModalProps> = ({
         toast.success("Dados alterados com sucesso!", {
           autoClose: 2000,
         });
-        triggerUpdate(); // Atualiza os dados no componente Account
-        setIsOpen(false); // Fecha o modal
+        triggerUpdate();
+        setIsOpen(false);
       }
     } catch (error: any) {
-      // Verifica se o erro tem uma resposta da API
       if (error.response) {
         const { error: errorMessage, message } = error.response.data;
         toast.error(`${errorMessage}: ${message}`, {
@@ -133,8 +134,8 @@ const EditDataModal: React.FC<EditDataModalProps> = ({
             >
               Data de Nascimento
             </label>
-            <input
-              type="date"
+            <InputMask
+              mask="99/99/9999"
               name="dataNascimento"
               defaultValue={defaultData.dataNascimento}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -161,8 +162,8 @@ const EditDataModal: React.FC<EditDataModalProps> = ({
             >
               Telefone Celular
             </label>
-            <input
-              type="text"
+            <InputMask
+              mask="(99) 99999-9999"
               name="telefoneCelular"
               defaultValue={defaultData.telefoneCelular}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"

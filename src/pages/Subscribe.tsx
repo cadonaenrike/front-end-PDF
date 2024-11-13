@@ -1,9 +1,9 @@
 import { useState } from "react";
-
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { createAccount } from "./api/SubscribeApi";
 import { useRouter } from "next/navigation";
+import InputMask from "react-input-mask";
 
 interface AccountData {
   nome: string;
@@ -37,8 +37,15 @@ const Subscribe = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.log(accountData);
-      const response = await createAccount(accountData);
+      // Remova as máscaras antes de enviar os dados
+      const cleanData = {
+        ...accountData,
+        cpf: accountData.cpf.replace(/\D/g, ""),
+        telefoneCelular: accountData.telefoneCelular.replace(/\D/g, ""),
+        dataNascimento: accountData.dataNascimento,
+      };
+      console.log(cleanData);
+      const response = await createAccount(cleanData);
       window.location.href = "/Login";
       toast.success("Conta criada com sucesso!");
     } catch (error) {
@@ -80,8 +87,8 @@ const Subscribe = () => {
               </div>
               <div className="w-full md:w-1/2 px-2 mb-4">
                 <label className="block text-sm font-medium mb-1">CPF</label>
-                <input
-                  type="text"
+                <InputMask
+                  mask="999.999.999-99"
                   name="cpf"
                   required
                   value={accountData.cpf}
@@ -104,8 +111,8 @@ const Subscribe = () => {
                 <label className="block text-sm font-medium mb-1">
                   Data de Nascimento
                 </label>
-                <input
-                  type="date"
+                <InputMask
+                  mask="99/99/9999"
                   name="dataNascimento"
                   required
                   value={accountData.dataNascimento}
@@ -117,8 +124,8 @@ const Subscribe = () => {
                 <label className="block text-sm font-medium mb-1">
                   Telefone Celular
                 </label>
-                <input
-                  type="text"
+                <InputMask
+                  mask="(99) 99999-9999"
                   name="telefoneCelular"
                   required
                   value={accountData.telefoneCelular}

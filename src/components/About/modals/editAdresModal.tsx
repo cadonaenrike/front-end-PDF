@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { EditAbout } from "@/pages/api/about";
 import decryptJwt from "@/components/decripted/decript";
 import { DecodedToken } from "@/interfaces/decodeType";
+import InputMask from "react-input-mask";
 
 interface EditAddressModalProps {
   triggerUpdate: () => void;
@@ -30,6 +31,7 @@ const EditAddressModal: React.FC<EditAddressModalProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [accountData, setAccountData] = useState<DecodedToken | null>(null);
+
   const fetchData = () => {
     try {
       const data = decryptJwt();
@@ -56,11 +58,11 @@ const EditAddressModal: React.FC<EditAddressModalProps> = ({
     };
 
     try {
-      const response = await EditAbout(data, accountData!.usuario.id); // Ajuste o caminho aqui conforme a necessidade
+      const response = await EditAbout(data, accountData!.usuario.id);
       if (response.status === 200) {
         toast.success("Endereço alterado com sucesso!");
-        triggerUpdate(); // Atualiza os dados no componente Account
-        setIsOpen(false); // Fecha o modal
+        triggerUpdate();
+        setIsOpen(false);
       }
     } catch (error: any) {
       if (error.response) {
@@ -144,8 +146,8 @@ const EditAddressModal: React.FC<EditAddressModalProps> = ({
             >
               CEP
             </label>
-            <input
-              type="text"
+            <InputMask
+              mask="99999-999"
               name="cep"
               defaultValue={defaultAddress.cep}
               required
