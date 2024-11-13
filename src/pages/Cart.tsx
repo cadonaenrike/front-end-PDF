@@ -11,12 +11,26 @@ const CartPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<ProductData[]>([]);
   const [billingType, setBillingType] = useState("PIX");
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const storedCartItems = JSON.parse(sessionStorage.getItem("cart") || "[]");
     setCartItems(storedCartItems);
   }, []);
 
+  useEffect(() => {
+    const token = sessionStorage.getItem("jwt");
+
+    if (!token) {
+      window.location.href = "Login";
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, [router]);
+
+  if (!isAuthenticated) {
+    return null;
+  }
   const removeItem = (index: number) => {
     const updatedCart = [...cartItems];
     updatedCart.splice(index, 1);
