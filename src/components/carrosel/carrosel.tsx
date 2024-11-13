@@ -34,6 +34,7 @@ const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
 );
 
 const Carousel: React.FC<CarouselProps> = ({ cards }) => {
+
   const settings: Settings = {
     dots: false,
     infinite: true,

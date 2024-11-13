@@ -22,7 +22,7 @@ const Home = () => {
           description: product.descricao,
           price: parseFloat(product.valor),
           link: "/categories",
-          imageSrc: `data:image/png;base64,${product.fotos[0]}`,
+          imageSrc: `data:image/png;base64,${product.fotos.join("")}`,
           imageAlt: product.nome_produto,
           category: product.categoria,
         }));
