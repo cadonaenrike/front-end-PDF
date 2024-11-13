@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import api from "@/pages/api/api";
 
 interface AddProductModalProps {
   triggerUpdate: () => void;
@@ -55,7 +56,27 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
   };
 
   const handleFotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFotoFiles(e.target.files);
+    const files = e.target.files;
+    if (files) {
+      // Verifique o tamanho de cada imagem e impeça a seleção se alguma for maior que 1 MB
+      const isValid = Array.from(files).every((file) => {
+        if (file.size > 1024 * 1024) {
+          // 1 MB
+          toast.error(
+            `A imagem ${file.name} excede o limite de 1 MB. Por favor, escolha outra imagem.`
+          );
+          return false;
+        }
+        return true;
+      });
+
+      // Atualiza o estado apenas se todas as imagens forem válidas
+      if (isValid) {
+        setFotoFiles(files);
+      } else {
+        setFotoFiles(null); // Nenhuma imagem será definida
+      }
+    }
   };
 
   const formatCurrency = (value: string) => {
@@ -63,7 +84,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
     const formattedValue = (Number(cleanValue) / 100).toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
-      minimumFractionDigits: 2, 
+      minimumFractionDigits: 2,
     });
     return formattedValue.replace(/\./g, "");
   };
@@ -74,9 +95,17 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // Verifique se as fotos são válidas antes de permitir o envio
+    if (
+      !fotoFiles ||
+      Array.from(fotoFiles).some((file) => file.size > 1024 * 1024)
+    ) {
+      toast.error("Por favor, selecione imagens de até 1 MB.");
+      return; // Interrompe o envio se houver alguma imagem inválida
+    }
     setLoading(true);
 
-    const partSize = 1024 * 1024 * 4; // 4 MB por parte
+    const partSize = 1024 * 1024 * 2; // 4 MB por parte
     const nomeArquivo = pdfFile?.name || "";
     const totalParts = Math.ceil(pdfFile!.size / partSize || 0);
 
@@ -106,16 +135,16 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
         }
 
         try {
-          await fetch(
-            "https://back-eight-chi.vercel.app/adicionar-produto-v2",
-            {
-              method: "POST",
-              headers: {
-                "api-key": "tpfTech", // Use sua chave de API
-              },
-              body: formData,
-            }
-          );
+          await api.post("/adicionar-produto-v2", formData, {
+            onUploadProgress: (progressEvent) => {
+              if (progressEvent.total) {
+                const progress = Math.round(
+                  (progressEvent.loaded / progressEvent.total) * 100
+                );
+                setUploadProgress(progress);
+              }
+            },
+          });
 
           console.log(`Parte ${i + 1} de ${totalParts} enviada com sucesso`);
 

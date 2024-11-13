@@ -65,7 +65,26 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   };
 
   const handleFotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFotoFiles(e.target.files);
+    const files = e.target.files;
+    if (files) {
+      // Verifica se alguma imagem excede 1 MB
+      const isValid = Array.from(files).every((file) => {
+        if (file.size > 1024 * 1024) {
+          toast.error(
+            `A imagem ${file.name} excede o limite de 1 MB. Por favor, escolha outra imagem.`
+          );
+          return false;
+        }
+        return true;
+      });
+
+      // Atualiza o estado somente se todas as imagens forem válidas
+      if (isValid) {
+        setFotoFiles(files);
+      } else {
+        setFotoFiles(null); // Limpa o estado se alguma imagem for inválida
+      }
+    }
   };
 
   const formatCurrency = (value: string) => {
@@ -84,6 +103,16 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Verificação final das imagens antes de enviar
+    if (
+      !fotoFiles ||
+      Array.from(fotoFiles).some((file) => file.size > 1024 * 1024)
+    ) {
+      toast.error("Por favor, selecione imagens de até 1 MB.");
+      return; // Impede o envio se houver imagens maiores que 1 MB
+    }
+
     setLoading(true);
 
     const formData = new FormData();
