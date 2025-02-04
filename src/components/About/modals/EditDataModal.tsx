@@ -45,8 +45,6 @@ const EditDataModal: React.FC<EditDataModalProps> = ({
   useEffect(() => {
     fetchData();
   }, []);
-
-  console.log(accountData);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -113,20 +111,7 @@ const EditDataModal: React.FC<EditDataModalProps> = ({
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div>
-            <label
-              htmlFor="sexo"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Sexo
-            </label>
-            <input
-              type="text"
-              name="sexo"
-              defaultValue={defaultData.sexo}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
+          
           <div>
             <label
               htmlFor="dataNascimento"

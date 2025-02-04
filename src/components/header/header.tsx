@@ -6,6 +6,7 @@ import logo from "@/images/logoAtualizadaFotter.png";
 import Link from "next/link";
 import { FiMenu, FiX } from "react-icons/fi"; // Ícones do menu e de fechamento
 import decryptJwt from "../decripted/decript";
+import SearchBar from "../searchBar/searchBar";
 
 const Header = () => {
   const [userData, setUserData] = useState<any>(null);
@@ -61,32 +62,7 @@ const Header = () => {
           <div className="flex flex-col md:flex-row items-center gap-4">
             {/* Search Form */}
             <div className="w-full min-w-96 md:flex items-center relative hidden">
-              <form className="w-full">
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-gray-700"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 12.125 18.2635 14.078 17.0319 15.6177L23.4142 22L22 23.4142L15.6177 17.0319C14.078 18.2635 12.125 19 10 19C5.02944 19 1 14.9706 1 10ZM10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3Z"
-                      />
-                    </svg>
-                  </span>
-                  <input
-                    type="search"
-                    name="search"
-                    className="pl-10 py-3 w-full border border-gray-300 rounded-lg text-sm bg-gray-200 placeholder-gray-500 focus:outline-none focus:border-gray-400"
-                    placeholder="Faça sua pesquisa aqui..."
-                  />
-                </div>
-              </form>
+              <SearchBar/>
             </div>
 
             {/* Welcome Message */}
