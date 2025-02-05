@@ -53,9 +53,9 @@ const Account = () => {
       <div className="border-2 rounded-xl py-5">
         {loading ? (
           <div className=" text-center p-6">
-          <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
-          <p className="mt-2 text-gray-500">Carregando...</p>
-        </div>
+            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
+            <p className="mt-2 text-gray-500">Carregando...</p>
+          </div>
         ) : (
           <>
             <div className="bg-white rounded-xl p-6">
@@ -63,9 +63,9 @@ const Account = () => {
               <p>
                 <strong>Nome:</strong> {accountData?.usuario.nome}
               </p>
-              <p>
+              {/* <p>
                 <strong>Sexo:</strong> {accountData?.usuario.sexo}
-              </p>
+              </p> */}
               <p>
                 <strong>Data de nascimento:</strong>{" "}
                 {accountData?.usuario.datanascimento}
@@ -78,7 +78,13 @@ const Account = () => {
                 {accountData?.usuario.telefonecelular}
               </p>
               <div className="mt-4 flex gap-2">
-                <ChangePasswordModal triggerUpdate={triggerUpdate} />
+                <ChangePasswordModal
+                  bg="blue-600"
+                  color="white"
+                  title="Alterar Senha"
+                  subtitle="Preencha os campos abaixo para alterar sua senha."
+                  triggerUpdate={triggerUpdate}
+                />
                 <EditDataModal
                   triggerUpdate={triggerUpdate}
                   defaultData={{

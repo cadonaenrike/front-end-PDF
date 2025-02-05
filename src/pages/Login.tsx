@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { login } from "./api/LoginApi";
 import { LoginData } from "@/interfaces/LoginData";
+import ChangePasswordModal from "@/components/About/modals/ChangePasswordModal";
 
 const Login = () => {
   const [loginData, setLoginData] = useState<LoginData>({
@@ -40,6 +41,14 @@ const Login = () => {
     }
   };
 
+  const handleRedirectToSubscribe = () => {
+    if (!loginData.email) {
+      toast.warn("Por favor, insira um e-mail antes de continuar!");
+      return;
+    }
+    router.push(`/Subscribe?email=${encodeURIComponent(loginData.email)}`);
+  };
+
   return (
     <div className="flex p-6 justify-center scroll-auto">
       <div className="m-4 p-8 bg-white shadow-md rounded-xl w-full max-w-md border-x border-y border-black">
@@ -63,12 +72,14 @@ const Login = () => {
             value={loginData.senha}
             onChange={handleChange}
           />
-          <Link
-            href="/Subscribe"
-            className="text-black font-jost text-base font-normal hover:underline"
-          >
-            Esqueceu a sua senha?
-          </Link>
+
+          <ChangePasswordModal
+            bg=""
+            color="black"
+            title="Esqueceu a sua senha?"
+            subtitle="Preencha os campos abaixo para recuperar."
+          />
+
           <button
             type="submit"
             disabled={isSubmitting}
@@ -96,11 +107,12 @@ const Login = () => {
         <input
           className="w-full p-2 mb-4 border mt-2 rounded bg-gray-200"
           type="email"
+          name="email"
+          value={loginData.email}
+          onChange={handleChange} // Sincroniza com o estado do e-mail
         />
         <button
-          onClick={(e) => {
-            window.location.href = "/Subscribe";
-          }}
+          onClick={handleRedirectToSubscribe}
           className="w-full bg-blue-800 text-white p-3 font-jost text-base font-semibold rounded-md mt-8 hover:bg-blue-400"
         >
           Cadastrar

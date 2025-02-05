@@ -1,8 +1,10 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { createAccount } from "./api/SubscribeApi";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router"; // Alterado para o hook correto
 import InputMask from "react-input-mask";
 
 interface AccountData {
@@ -25,6 +27,16 @@ const Subscribe = () => {
   });
 
   const router = useRouter();
+  const { email } = router.query;
+
+  useEffect(() => {
+    if (email && typeof email === "string") {
+      setAccountData((prevData) => ({
+        ...prevData,
+        email,
+      }));
+    }
+  }, [email]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,12 +49,10 @@ const Subscribe = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Remova as máscaras antes de enviar os dados
       const cleanData = {
         ...accountData,
         cpf: accountData.cpf.replace(/\D/g, ""),
         telefoneCelular: accountData.telefoneCelular.replace(/\D/g, ""),
-        dataNascimento: accountData.dataNascimento,
       };
       console.log(cleanData);
       const response = await createAccount(cleanData);
@@ -135,7 +145,6 @@ const Subscribe = () => {
               </div>
             </div>
           </div>
-
           <div className="flex items-center mb-6">
             <input
               id="agreement"
@@ -146,6 +155,11 @@ const Subscribe = () => {
             <label htmlFor="agreement" className="ml-2">
               Li e concordo com os termos de uso.
             </label>
+          </div>
+          <div className="flex items-center mb-6">
+            <Link href="/Terms">
+              <span className="hover:text-gray-300">Termos de Uso</span>
+            </Link>
           </div>
 
           <div className="flex items-center justify-center flex-col">
