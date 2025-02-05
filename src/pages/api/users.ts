@@ -18,3 +18,12 @@ export const DeleteUser = async (idUser: string) => {
       throw error;
     }
   };
+export const changePassword = async (data: {}) => {
+    try {
+      const response = await api.post(`/esqueci-senha`,data);
+      return response;
+    } catch (error) {
+      console.error("Error", error);
+      throw error;
+    }
+  };

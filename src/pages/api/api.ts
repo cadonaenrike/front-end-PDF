@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "https://back-eight-chi.vercel.app";
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const api = axios.create({
   baseURL,
