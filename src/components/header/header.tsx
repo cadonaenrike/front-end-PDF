@@ -7,15 +7,16 @@ import Link from "next/link";
 import { FiMenu, FiX } from "react-icons/fi"; // Ícones do menu e de fechamento
 import decryptJwt from "../decripted/decript";
 import SearchBar from "../searchBar/searchBar";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
+  const pathname = usePathname()
   const [userData, setUserData] = useState<any>(null);
   const [admin, setAdmin] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado do menu sanduíche
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setTimeout(() => {
         const token = sessionStorage.getItem("jwt");
         if (token) {
           const decodedToken = decryptJwt();
@@ -24,9 +25,8 @@ const Header = () => {
             setAdmin(decodedToken.usuario.admin);
           }
         }
-      }, 4000);
     }
-  }, []);
+  }, [pathname]);
 
   // Função para alternar o menu
   const toggleMenu = () => {

@@ -13,6 +13,7 @@ const Login = () => {
     email: "",
     senha: "",
   });
+  const [emailSubscribe, setEmailSubscribe] = useState <string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -42,11 +43,11 @@ const Login = () => {
   };
 
   const handleRedirectToSubscribe = () => {
-    if (!loginData.email) {
+    if (!emailSubscribe) {
       toast.warn("Por favor, insira um e-mail antes de continuar!");
       return;
     }
-    router.push(`/Subscribe?email=${encodeURIComponent(loginData.email)}`);
+    router.push(`/Subscribe?email=${encodeURIComponent(emailSubscribe)}`);
   };
 
   return (
@@ -107,9 +108,9 @@ const Login = () => {
         <input
           className="w-full p-2 mb-4 border mt-2 rounded bg-gray-200"
           type="email"
-          name="email"
-          value={loginData.email}
-          onChange={handleChange} // Sincroniza com o estado do e-mail
+          name="emailSubscribe"
+          value={emailSubscribe || ""}
+          onChange={(e)=>{setEmailSubscribe(e.target.value)}}
         />
         <button
           onClick={handleRedirectToSubscribe}
