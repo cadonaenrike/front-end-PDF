@@ -12,10 +12,13 @@ const SidebarAbout: React.FC<SidebarProps> = ({
   activeComponent,
 }) => {
   const handleLogout = () => {
-    // Remove o token do sessionStorage
-    sessionStorage.removeItem("jwt");
-    // Redireciona para a página inicial
-    window.location.href = "/";
+    // Limpa completamente o sessionStorage
+    sessionStorage.clear();
+
+    // Aguarda um pequeno tempo para garantir que os dados foram apagados antes de redirecionar
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 100);
   };
 
   return (
@@ -55,9 +58,12 @@ const SidebarAbout: React.FC<SidebarProps> = ({
             <FaBook className="mr-2" />
             <span>Minha Biblioteca</span>
           </li>
-          <li className="flex items-center p-4 border-b-2 border-black  text-black hover:bg-blue-200 transition">
+          <li
+            onClick={handleLogout}
+            className="flex items-center p-4 border-b-2 border-black  text-black hover:bg-blue-200 transition"
+          >
             <FaSignOutAlt className="mr-2" />
-            <button onClick={handleLogout}>Sair</button>
+            <span>Sair</span>
           </li>
         </ul>
       </nav>

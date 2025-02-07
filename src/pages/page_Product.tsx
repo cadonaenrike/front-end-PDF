@@ -73,6 +73,10 @@ const ProductPage = () => {
     const cartItems = JSON.parse(sessionStorage.getItem("cart") || "[]");
     const updatedCart = [...cartItems, { ...product }];
     sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    // Dispara um evento para atualizar o contador no Header
+    window.dispatchEvent(new Event("storage"));
+
     toast.success("Produto adicionado ao carrinho!");
   };
 

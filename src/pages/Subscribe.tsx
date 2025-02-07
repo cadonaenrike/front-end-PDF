@@ -65,13 +65,15 @@ const Subscribe = () => {
   };
 
   return (
-    <div className="m-4 flex flex-col justify-center px-28">
+    <div className="m-4 flex flex-col justify-center px-4 sm:px-8 lg:px-28">
       <form onSubmit={handleSubmit} className="w-full mx-auto">
-        <div className="bg-white p-8">
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold mb-2">Seus dados para acesso</h2>
+        <div className="bg-white p-6 sm:p-8 lg:p-12">
+          <div className="mb-6">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 text-center lg:text-left">
+              Seus dados para acesso
+            </h2>
             <div className="flex flex-wrap -mx-2">
-              <div className="w-full md:w-1/2 px-2 mb-4">
+              <div className="w-full sm:w-1/2 px-2 mb-4">
                 <label className="block text-sm font-medium mb-1">
                   Nome Completo
                 </label>
@@ -81,10 +83,10 @@ const Subscribe = () => {
                   required
                   value={accountData.nome}
                   onChange={handleChange}
-                  className="form-input py-2 px-1 bg-gray-200 w-full"
+                  className="form-input py-2 px-3 bg-gray-200 w-full rounded-md"
                 />
               </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
+              <div className="w-full sm:w-1/2 px-2 mb-4">
                 <label className="block text-sm font-medium mb-1">Email</label>
                 <input
                   type="email"
@@ -92,10 +94,10 @@ const Subscribe = () => {
                   required
                   value={accountData.email}
                   onChange={handleChange}
-                  className="form-input py-2 px-1 bg-gray-200 w-full"
+                  className="form-input py-2 px-3 bg-gray-200 w-full rounded-md"
                 />
               </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
+              <div className="w-full sm:w-1/2 px-2 mb-4">
                 <label className="block text-sm font-medium mb-1">CPF</label>
                 <InputMask
                   mask="999.999.999-99"
@@ -103,10 +105,10 @@ const Subscribe = () => {
                   required
                   value={accountData.cpf}
                   onChange={handleChange}
-                  className="form-input py-2 px-1 bg-gray-200 w-full"
+                  className="form-input py-2 px-3 bg-gray-200 w-full rounded-md"
                 />
               </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
+              <div className="w-full sm:w-1/2 px-2 mb-4">
                 <label className="block text-sm font-medium mb-1">Senha</label>
                 <input
                   type="password"
@@ -114,10 +116,10 @@ const Subscribe = () => {
                   required
                   value={accountData.senha}
                   onChange={handleChange}
-                  className="form-input py-2 px-1 bg-gray-200 w-full"
+                  className="form-input py-2 px-3 bg-gray-200 w-full rounded-md"
                 />
               </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
+              <div className="w-full sm:w-1/2 px-2 mb-4">
                 <label className="block text-sm font-medium mb-1">
                   Data de Nascimento
                 </label>
@@ -127,10 +129,10 @@ const Subscribe = () => {
                   required
                   value={accountData.dataNascimento}
                   onChange={handleChange}
-                  className="form-input py-2 px-1 bg-gray-200 w-full"
+                  className="form-input py-2 px-3 bg-gray-200 w-full rounded-md"
                 />
               </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
+              <div className="w-full sm:w-1/2 px-2 mb-4">
                 <label className="block text-sm font-medium mb-1">
                   Telefone Celular
                 </label>
@@ -140,7 +142,7 @@ const Subscribe = () => {
                   required
                   value={accountData.telefoneCelular}
                   onChange={handleChange}
-                  className="form-input py-2 px-1 bg-gray-200 w-full"
+                  className="form-input py-2 px-3 bg-gray-200 w-full rounded-md"
                 />
               </div>
             </div>
@@ -158,19 +160,21 @@ const Subscribe = () => {
           </div>
           <div className="flex items-center mb-6">
             <Link href="/Terms">
-              <span className="hover:text-gray-300">Termos de Uso</span>
+              <span className="hover:text-gray-400 underline">
+                Termos de Uso
+              </span>
             </Link>
           </div>
 
-          <div className="flex items-center justify-center flex-col">
+          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4">
             <button
               type="submit"
-              className="w-1/3 py-2 px-4 min-h-9 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center font-inter text-lg font-semibold capitalize"
+              className="w-full sm:w-1/3 py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all text-center font-inter text-lg font-semibold capitalize"
             >
               Cadastrar
             </button>
 
-            <button className="w-1/3 mt-2 py-2 px-4 min-h-9 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors text-center font-inter text-lg font-semibold capitalize">
+            <button className="w-full sm:w-1/3 py-3 px-4 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-100 transition-all text-center font-inter text-lg font-semibold capitalize">
               <Link href="/Login">Cancelar</Link>
             </button>
           </div>

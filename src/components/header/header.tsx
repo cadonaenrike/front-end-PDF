@@ -10,23 +10,41 @@ import SearchBar from "../searchBar/searchBar";
 import { usePathname } from "next/navigation";
 
 const Header = () => {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const [userData, setUserData] = useState<any>(null);
   const [admin, setAdmin] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado do menu sanduíche
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-        const token = sessionStorage.getItem("jwt");
-        if (token) {
-          const decodedToken = decryptJwt();
-          if (decodedToken) {
-            setUserData(decodedToken);
-            setAdmin(decodedToken.usuario.admin);
-          }
+      const token = sessionStorage.getItem("jwt");
+      if (token) {
+        const decodedToken = decryptJwt();
+        if (decodedToken) {
+          setUserData(decodedToken);
+          setAdmin(decodedToken.usuario.admin);
         }
+      }
     }
   }, [pathname]);
+
+  useEffect(() => {
+    // Função para atualizar a contagem do carrinho
+    const updateCartCount = () => {
+      const cartItems = JSON.parse(sessionStorage.getItem("cart") || "[]");
+      setCartCount(cartItems.length);
+    };
+
+    updateCartCount(); // Atualiza ao montar o componente
+
+    // Adiciona um evento de escuta para mudanças no sessionStorage
+    window.addEventListener("storage", updateCartCount);
+
+    return () => {
+      window.removeEventListener("storage", updateCartCount);
+    };
+  }, []);
 
   // Função para alternar o menu
   const toggleMenu = () => {
@@ -62,7 +80,7 @@ const Header = () => {
           <div className="flex flex-col md:flex-row items-center gap-4">
             {/* Search Form */}
             <div className="w-full min-w-96 md:flex items-center relative hidden">
-              <SearchBar/>
+              <SearchBar />
             </div>
 
             {/* Welcome Message */}
@@ -103,7 +121,7 @@ const Header = () => {
 
             {/* Cart Icon */}
             <Link href={"/Cart"}>
-              <div className=" min-w-36 flex items-center justify-center p-2 bg-gray-200 border border-gray-200 shadow-sm rounded-lg">
+              <div className="relative min-w-36 flex items-center justify-center p-2 bg-gray-200 border border-gray-200 shadow-sm rounded-lg">
                 <svg
                   className="mr-2"
                   xmlns="http://www.w3.org/2000/svg"
@@ -130,6 +148,12 @@ const Header = () => {
                 <span className="text-neutral-700 text-sm whitespace-nowrap">
                   Seu Carrinho
                 </span>
+
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                    {cartCount}
+                  </span>
+                )}
               </div>
             </Link>
 

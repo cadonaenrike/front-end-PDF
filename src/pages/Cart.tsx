@@ -10,18 +10,32 @@ import { useRouter } from "next/router";
 const CartPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<ProductData[]>([]);
   const [billingType, setBillingType] = useState("PIX");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    const token = sessionStorage.getItem("jwt");
     const storedCartItems = JSON.parse(sessionStorage.getItem("cart") || "[]");
     setCartItems(storedCartItems);
-  }, []);
 
+    if (!token) {
+      window.location.href = "Login";
+    } else {
+      setIsAuthenticated(true); 
+    }
+  }, [router]);
+
+  if (!isAuthenticated) {
+    
+    return null;
+  }
+  
   const removeItem = (index: number) => {
     const updatedCart = [...cartItems];
     updatedCart.splice(index, 1);
     setCartItems(updatedCart);
     sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("storage"));
   };
 
   const handlePayment = async () => {
@@ -39,7 +53,7 @@ const CartPage: React.FC = () => {
     const data = {
       billingType,
       value: totalAmount,
-      dueDate: new Date(Date.now() + 86400000).toISOString().split("T")[0], // Data de vencimento para o próximo dia
+      dueDate: new Date(Date.now() + 86400000).toISOString().split("T")[0],
       description: "Pagamento de produtos",
       idProduto: cartItems.map((item) => item.id),
       idUsuario: userId,
