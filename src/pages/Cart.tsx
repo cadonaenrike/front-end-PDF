@@ -12,7 +12,6 @@ const CartPage: React.FC = () => {
   const [billingType, setBillingType] = useState("PIX");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem("jwt");
@@ -22,15 +21,14 @@ const CartPage: React.FC = () => {
     if (!token) {
       window.location.href = "Login";
     } else {
-      setIsAuthenticated(true); 
+      setIsAuthenticated(true);
     }
   }, [router]);
 
   if (!isAuthenticated) {
-    
     return null;
   }
-  
+
   const removeItem = (index: number) => {
     const updatedCart = [...cartItems];
     updatedCart.splice(index, 1);
