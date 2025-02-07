@@ -1,25 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { TbRectangle } from "react-icons/tb";
-import EnsinoMedio from "@/images/imagesCategoryes/EnsinoMedio.png";
-import Alfabetizacao from "@/images/imagesCategoryes/Alfabetizacao.png";
-import Artes from "@/images/imagesCategoryes/Artes.png";
-import Biologia from "@/images/imagesCategoryes/Biologia.png";
-import Ciencias from "@/images/imagesCategoryes/Ciencias.png";
-import DatasComemorativas from "@/images/imagesCategoryes/DatasComemorativas.png";
-import EducacaoFisica from "@/images/imagesCategoryes/EducacaoFisica.png";
-import EnsinoReligioso from "@/images/imagesCategoryes/EnsinoReligioso.png";
-import Filosofia from "@/images/imagesCategoryes/Filosofia.png";
-import Fisica from "@/images/imagesCategoryes/Fisica.png";
-import Geografia from "@/images/imagesCategoryes/Geografia.png";
-import Historia from "@/images/imagesCategoryes/Historia.png";
-import Humanidade from "@/images/imagesCategoryes/Humanidade.png";
-import Ingles from "@/images/imagesCategoryes/Ingles.png";
-import LinguaPortuguesa from "@/images/imagesCategoryes/LinguaPortuguesa.png";
-import Matematica from "@/images/imagesCategoryes/Matematica.png";
-import MetodologiaAtivas from "@/images/imagesCategoryes/MetodologiaAtivas.png";
-import ProjetoVida from "@/images/imagesCategoryes/ProjetoVida.png";
-import Quimica from "@/images/imagesCategoryes/Quimica.png";
-import Sociologia from "@/images/imagesCategoryes/Sociologia.png";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi"; // Ícones para expandir/recolher
 
 interface FiltersProps {
   selectedCategories: string[];
@@ -34,28 +15,28 @@ const Filters: React.FC<FiltersProps> = ({
   selectedPriceRange,
   setSelectedPriceRange,
 }) => {
+  const [isOpen, setIsOpen] = useState(false); // Estado do acordeão no mobile
+  const [openSection, setOpenSection] = useState<string | null>(null); // Estado para abrir seção específica
+
   const categories = [
-    { name: "Novo Ensino Médio", icon: EnsinoMedio },
-    { name: "Alfabetização", icon: Alfabetizacao },
-    { name: "Arte", icon: Artes },
-    { name: "Biologia", icon: Biologia },
-    { name: "Ciências", icon: Ciencias },
-    {
-      name: "Datas comemorativas e Apostila das cores",
-      icon: DatasComemorativas,
-    },
-    { name: "Educação Física", icon: EducacaoFisica },
-    { name: "Ensino Religioso", icon: EnsinoReligioso },
-    { name: "Filosofia", icon: Filosofia },
-    { name: "Física", icon: Fisica },
-    { name: "Geografia", icon: Geografia },
-    { name: "História", icon: Historia },
-    { name: "Inglês", icon: Ingles },
-    { name: "Língua Portuguesa", icon: LinguaPortuguesa },
-    { name: "Matemática", icon: Matematica },
-    { name: "Eletiva", icon: ProjetoVida },
-    { name: "Química", icon: Quimica },
-    { name: "Sociologia", icon: Sociologia },
+    "Novo Ensino Médio",
+    "Alfabetização",
+    "Arte",
+    "Biologia",
+    "Ciências",
+    "Datas comemorativas e Apostila das cores",
+    "Educação Física",
+    "Ensino Religioso",
+    "Filosofia",
+    "Física",
+    "Geografia",
+    "História",
+    "Inglês",
+    "Língua Portuguesa",
+    "Matemática",
+    "Eletiva",
+    "Química",
+    "Sociologia",
   ];
 
   const priceRanges = [
@@ -77,52 +58,96 @@ const Filters: React.FC<FiltersProps> = ({
     setSelectedPriceRange(priceRange);
   };
 
+  const toggleAccordion = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const toggleSection = (section: string) => {
+    setOpenSection(openSection === section ? null : section);
+  };
+
   return (
-    <div className=" px-4 bg-white">
-      <nav className="flex flex-col gap-4">
-        <div>
-          <h3 className="text-lg px-2 font-bold border-b-2 border-black  mb-2">
+    <div className="w-full md:w-auto bg-white p-4 border md:border-none">
+      {/* Botão para abrir/fechar filtros no mobile */}
+      <button
+        onClick={toggleAccordion}
+        className="md:hidden flex items-center justify-between w-full bg-blue-600 text-white px-4 py-3 rounded-md font-semibold"
+      >
+        Filtros
+        {isOpen ? <FiChevronUp size={20} /> : <FiChevronDown size={20} />}
+      </button>
+
+      {/* Conteúdo do acordeão no mobile */}
+      <div
+        className={`transition-all duration-300 ${
+          isOpen ? "block" : "hidden"
+        } md:block`}
+      >
+        {/* Filtro por Categoria */}
+        <div className="mt-4 md:mt-0 border-b pb-4">
+          <button
+            onClick={() => toggleSection("categorias")}
+            className="flex justify-between items-center w-full text-lg font-semibold py-2 text-gray-800"
+          >
             Categorias
-          </h3>
-          <ul className="flex flex-col gap-1">
-            {categories.map(({ name, icon: Icon }) => (
-              <li
-                key={name}
-                className={`flex items-center px-2 py-1  border-b   cursor-pointer transition-colors ${
-                  selectedCategories.includes(name)
-                    ? "bg-blue-500 text-white"
-                    : "text-gray-900 hover:bg-blue-100"
-                }`}
-                onClick={() => handleCategoryChange(name)}
-              >
-                <span className="font-medium">{name}</span>
-              </li>
-            ))}
-          </ul>
+            {openSection === "categorias" ? (
+              <FiChevronUp size={20} />
+            ) : (
+              <FiChevronDown size={20} />
+            )}
+          </button>
+          {openSection === "categorias" && (
+            <ul className="flex flex-col gap-2 mt-2">
+              {categories.map((name) => (
+                <li
+                  key={name}
+                  className={`flex items-center p-2 border-b cursor-pointer transition-colors ${
+                    selectedCategories.includes(name)
+                      ? "bg-blue-500 text-white"
+                      : "text-gray-900 hover:bg-blue-100"
+                  }`}
+                  onClick={() => handleCategoryChange(name)}
+                >
+                  <span className="font-medium">{name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
-        <div className="flex pb-4 flex-col gap-2">
-          <h3 className="text-lg px-2 font-bold border-b-2 border-black  mb-2">
+        {/* Filtro por Preço */}
+        <div className="mt-4 border-b pb-4">
+          <button
+            onClick={() => toggleSection("preco")}
+            className="flex justify-between items-center w-full text-lg font-semibold py-2 text-gray-800"
+          >
             Filtrar por Preço
-          </h3>
-          <ul className="flex flex-col gap-1">
-            {priceRanges.map(({ range, label }) => (
-              <li
-                key={range}
-                className={`flex items-center px-2 py-1  border-b   cursor-pointer transition-colors ${
-                  selectedPriceRange === range
-                    ? "bg-blue-500 text-white"
-                    : "text-gray-900 hover:bg-blue-100"
-                }`}
-                onClick={() => handlePriceRangeChange(range)}
-              >
-                <TbRectangle className="mr-2 text-xl" />
-                <span className="font-medium">{label}</span>
-              </li>
-            ))}
-          </ul>
+            {openSection === "preco" ? (
+              <FiChevronUp size={20} />
+            ) : (
+              <FiChevronDown size={20} />
+            )}
+          </button>
+          {openSection === "preco" && (
+            <ul className="flex flex-col gap-2 mt-2">
+              {priceRanges.map(({ range, label }) => (
+                <li
+                  key={range}
+                  className={`flex items-center p-2 border-b cursor-pointer transition-colors ${
+                    selectedPriceRange === range
+                      ? "bg-blue-500 text-white"
+                      : "text-gray-900 hover:bg-blue-100"
+                  }`}
+                  onClick={() => handlePriceRangeChange(range)}
+                >
+                  <TbRectangle className="mr-2 text-xl" />
+                  <span className="font-medium">{label}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      </nav>
+      </div>
     </div>
   );
 };

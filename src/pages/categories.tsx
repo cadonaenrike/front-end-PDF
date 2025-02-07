@@ -20,8 +20,6 @@ const CategoriesAllPage: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const fetchedProducts: FetchedProduct[] = await getAllProducts();
-        console.log(fetchedProducts);
-
         const mappedProducts: ProductData[] = fetchedProducts.map(
           (product: FetchedProduct) => ({
             id: product.id.toString(),
@@ -92,7 +90,7 @@ const CategoriesAllPage: React.FC = () => {
 
   return (
     <div className="w-full h-auto bg-white">
-      <div className="w-full gap-2 flex flex-col md:flex-row m-0 p-0">
+      <div className="w-full gap-2 flex flex-col md:flex-row m-0 p-0 pb-4">
         <div className="w-full md:w-[20%] lg:w-[15%] mb-4 md:mb-0">
           <Filters
             selectedCategories={selectedCategories}

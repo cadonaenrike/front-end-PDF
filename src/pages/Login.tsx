@@ -13,6 +13,7 @@ const Login = () => {
     email: "",
     senha: "",
   });
+  const [emailSubscribe, setEmailSubscribe] = useState <string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -42,31 +43,31 @@ const Login = () => {
   };
 
   const handleRedirectToSubscribe = () => {
-    if (!loginData.email) {
+    if (!emailSubscribe) {
       toast.warn("Por favor, insira um e-mail antes de continuar!");
       return;
     }
-    router.push(`/Subscribe?email=${encodeURIComponent(loginData.email)}`);
+    router.push(`/Subscribe?email=${encodeURIComponent(emailSubscribe)}`);
   };
 
   return (
-    <div className="flex p-6 justify-center scroll-auto">
-      <div className="m-4 p-8 bg-white shadow-md rounded-xl w-full max-w-md border-x border-y border-black">
+    <div className="flex flex-col md:flex-row justify-center p-6 gap-6 ">
+      <div className="m-4 p-8 bg-white shadow-md rounded-xl w-full max-w-md border border-black">
         <h2 className="text-black text-center font-jost text-3xl font-semibold capitalize mb-8">
           Já Sou Cadastrado!
         </h2>
         <form onSubmit={handleSubmit}>
-          <label>E-mail</label>
+          <label className="block text-black text-sm font-medium">E-mail</label>
           <input
-            className="w-full p-2 mb-4 mt-2 border rounded bg-gray-200"
+            className="w-full p-2 mb-4 mt-2 border rounded bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
             type="email"
             name="email"
             value={loginData.email}
             onChange={handleChange}
           />
-          <label>Senha</label>
+          <label className="block text-black text-sm font-medium">Senha</label>
           <input
-            className="w-full p-2 mb-4 mt-2 border rounded bg-gray-200"
+            className="w-full p-2 mb-4 mt-2 border rounded bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
             type="password"
             name="senha"
             value={loginData.senha}
@@ -83,13 +84,14 @@ const Login = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-blue-800 text-white p-3 font-jost text-base font-semibold rounded-md mt-8 hover:bg-blue-400"
+            className="w-full bg-blue-800 text-white p-3 font-jost text-base font-semibold rounded-md mt-8 hover:bg-blue-600 transition-all duration-200"
           >
             {isSubmitting ? "Entrando..." : "Entrar"}
           </button>
         </form>
       </div>
-      <div className="m-4 p-8 bg-white shadow-md rounded-xl w-full max-w-md border-x border-y border-black">
+
+      <div className="m-4 p-8 bg-white shadow-md rounded-xl w-full max-w-md border border-black">
         <h2 className="text-black text-center font-jost text-3xl font-semibold capitalize mb-8">
           Ainda não possuo cadastro
         </h2>
@@ -103,17 +105,17 @@ const Login = () => {
           </Link>
         </p>
 
-        <label>E-mail</label>
+        <label className="block text-black text-sm font-medium">E-mail</label>
         <input
-          className="w-full p-2 mb-4 border mt-2 rounded bg-gray-200"
+          className="w-full p-2 mb-4 mt-2 border rounded bg-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
           type="email"
-          name="email"
-          value={loginData.email}
-          onChange={handleChange} // Sincroniza com o estado do e-mail
+          name="emailSubscribe"
+          value={emailSubscribe || ""}
+          onChange={(e) => setEmailSubscribe(e.target.value)}
         />
         <button
           onClick={handleRedirectToSubscribe}
-          className="w-full bg-blue-800 text-white p-3 font-jost text-base font-semibold rounded-md mt-8 hover:bg-blue-400"
+          className="w-full bg-blue-800 text-white p-3 font-jost text-base font-semibold rounded-md mt-8 hover:bg-blue-600 transition-all duration-200"
         >
           Cadastrar
         </button>

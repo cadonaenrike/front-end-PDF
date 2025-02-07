@@ -83,7 +83,7 @@ const Footer = () => {
         </div>
         <div className="flex items-center w-full flex-col">
           <div className="flex items-start flex-row gap-4 ">
-            <Link href="/facebook" className="mr-3">
+            <Link href="https://www.facebook.com/groups/3122508304471779/?ref=share" className="mr-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -97,7 +97,7 @@ const Footer = () => {
                 />
               </svg>
             </Link>
-            <Link href="/twitter">
+            {/* <Link href="/twitter">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -110,8 +110,8 @@ const Footer = () => {
                   fill="#BAC3CA"
                 />
               </svg>
-            </Link>
-            <Link href="/instagram" className="ml-3">
+            </Link> */}
+            <Link href="https://www.instagram.com/cacapalavrasdidaticos/" className="ml-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
