@@ -6,6 +6,7 @@ import Link from "next/link";
 import { login, loginSendEmail } from "./api/LoginApi";
 import { LoginData } from "@/interfaces/LoginData";
 import TwoStepLoginModal from "@/components/loginComponents/confirmationCodeModal";
+import ChangePasswordModal from "@/components/About/modals/ChangePasswordModal";
 
 const Login = () => {
   const [loginData, setLoginData] = useState<LoginData>({
@@ -31,17 +32,19 @@ const Login = () => {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
-    try {
-      const response = await login(loginData);
-      if (response) {
-        setTokenReturn(response.token);
-        setShowCodeModal(true);
-        loginSendEmail({ email: loginData.email });
-        toast.success("Código enviado para o seu e-mail!");
-      }
-    } catch (error) {
-      toast.error("Falha ao fazer login. Por favor, tente novamente.");
-    } finally {
+
+    const response: any = await login(loginData);
+    if (response.status === 200) {
+      setShowCodeModal(true);
+      setTokenReturn(response.data.token);
+      loginSendEmail({ email: loginData.email });
+      toast.success("Código enviado para o seu e-mail!");
+      setIsSubmitting(false);
+    } else if (response && response.status === 401) {
+      toast.error(response.data.error || "Acesso não autorizado.");
+      setIsSubmitting(false);
+    } else {
+      toast.error("Erro inesperado Contate o Administrador.");
       setIsSubmitting(false);
     }
   };
@@ -82,7 +85,12 @@ const Login = () => {
             value={loginData.senha}
             onChange={handleChange}
           />
-
+          {/* <ChangePasswordModal
+            bg=""
+            color="black"
+            title="Esqueceu a sua senha?"
+            subtitle="Preencha os campos abaixo para recuperar."
+          /> */}
           <button
             type="submit"
             disabled={isSubmitting}

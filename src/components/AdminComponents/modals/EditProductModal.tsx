@@ -131,6 +131,15 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Validação do valor mínimo: R$ 5,00
+    const numericValue = parseFloat(
+      valor.replace("R$", "").replace(",", ".").trim()
+    );
+    if (numericValue < 5) {
+      toast.error("O valor mínimo para o produto é R$ 5,00.");
+      return;
+    }
+
     if (
       fotoFiles &&
       Array.from(fotoFiles).some((file) => file.size > 1024 * 1024)

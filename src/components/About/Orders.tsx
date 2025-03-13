@@ -4,11 +4,13 @@ import DataTable from "react-data-table-component";
 import { OrderData } from "@/interfaces/OrderData";
 import { fetchOrderDataBycpf } from "@/pages/api/OrderApi";
 import decryptJwt from "../decripted/decript";
+import { useRouter } from "next/navigation";
 
 const Orders = () => {
   const [orders, setOrders] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [cpf, setCpf] = useState<string>("");
+  const router = useRouter();
 
   // Função para traduzir o tipo de pagamento
   const translatePaymentType = (billingType: string) => {
@@ -51,10 +53,8 @@ const Orders = () => {
       // Verifica se o código está sendo executado no lado do cliente
       setTimeout(() => {
         const token = sessionStorage.getItem("jwt");
-
         if (token) {
           const decodedToken = decryptJwt();
-
           if (decodedToken) {
             setCpf(decodedToken.usuario.cpf);
           }
@@ -114,19 +114,31 @@ const Orders = () => {
       sortable: true,
     },
   ];
+
   const paginationComponentOptions = {
     rowsPerPageText: "Pedidos por página",
     rangeSeparatorText: "de",
     selectAllRowsItem: true,
     selectAllRowsItemText: "Todos",
   };
+
   return (
     <div className="p-8">
       <h2 className="text-2xl font-bold mb-6">Meus Pedidos</h2>
       {loading ? (
-        <div className=" text-center p-6">
+        <div className="text-center p-6">
           <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
           <p className="mt-2 text-gray-500">Carregando...</p>
+        </div>
+      ) : orders.length === 0 ? (
+        <div className="text-center p-6">
+          <p className="mb-4 text-gray-500">Você não possui nenhum pedido.</p>
+          <button
+            onClick={() => router.push("/categories")}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Ver Produtos
+          </button>
         </div>
       ) : (
         <div className="bg-white p-6 border-2 rounded-xl">
