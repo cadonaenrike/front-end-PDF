@@ -148,8 +148,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
             },
           });
 
-          console.log(`Parte ${i + 1} de ${totalParts} enviada com sucesso`);
-
           // Atualiza o progresso do upload
           setUploadProgress(((i + 1) / totalParts) * 100);
         } catch (error) {

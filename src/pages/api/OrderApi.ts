@@ -10,7 +10,6 @@ export const fetchOrderData = async () => {
   }
 };
 export const fetchOrderDataBycpf = async (cpf: string) => {
-  console.log(cpf);
   try {
     const response = await api.get(`/list-payments-cpf/${cpf}`);
     return response.data;

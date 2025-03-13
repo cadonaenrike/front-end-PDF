@@ -147,11 +147,7 @@ const CombosProducts: React.FC<CombosProductsProps> = ({
             }
           },
         });
-        console.log(
-          `Arquivo ${fileIndex + 1} - Parte ${
-            i + 1
-          } de ${totalParts} enviada com sucesso`
-        );
+        
       } catch (error) {
         console.error("Erro ao enviar parte:", error);
         throw error;

@@ -8,6 +8,7 @@ export interface ProductData {
   imageSrc: string;
   imageAlt: string;
   category: string;
+  url: string;
 }
 export interface ProductAdmin {
   id: number;
