@@ -46,6 +46,7 @@ const ProductPage = () => {
       const fetchProduct = async () => {
         try {
           const fetchedProduct = await getProductById(numericId);
+
           const mappedProduct: ProductData = {
             id: fetchedProduct.id.toString(),
             title: fetchedProduct.nome_produto,
@@ -58,6 +59,7 @@ const ProductPage = () => {
               : "/path/to/default-image.png", // Imagem padrão se fotos for null
             imageAlt: fetchedProduct.nome_produto,
             category: fetchedProduct.categoria,
+            url: fetchedProduct.url,
           };
           setProduct(mappedProduct);
         } catch (error) {
@@ -95,11 +97,11 @@ const ProductPage = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 mt-4">
+    <div className="mx-auto relative max-w-screen-xl px-4 sm:px-6 lg:px-8 mt-4">
       {/* Detalhes do Produto */}
       <div className="flex flex-col md:flex-row mt-8 items-start">
         <div className="w-full md:w-[65%] lg:w-[60%]">
-          <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded overflow-hidden">
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 rounded overflow-hidden">
             <Image
               src={product.imageSrc}
               alt={product.imageAlt}
@@ -110,6 +112,12 @@ const ProductPage = () => {
               quality={100}
               className="object-contain max-h-[50vh]"
             />
+            <button
+              onClick={() => window.open(product.url, "_blank")}
+              className="self-end mr-4 my-4 bg-blue-600 text-white py-2 px-4 rounded shadow-lg"
+            >
+              Ver Mais
+            </button>
           </div>
         </div>
         <div className="w-full text-center md:text-start md:w-[35%] lg:w-[40%] md:ml-8 mt-4 md:mt-0">
@@ -125,6 +133,11 @@ const ProductPage = () => {
           <p className="text-gray-500 mt-4">
             <strong>Estoque:</strong> Disponível
           </p>
+          <div className="mt-4">
+            <p className="text-2xl font-bold text-green-600">
+              R$ {product.price.toFixed(2).replace(".", ",")}
+            </p>
+          </div>
           <div className="mt-14 flex flex-col gap-4 justify-center items-center">
             <button
               className="w-[60%] bg-blue-800 text-white font-extrabold py-2 px-4 rounded"
@@ -155,11 +168,12 @@ const ProductPage = () => {
       </div>
 
       {/* Produtos Relacionados */}
-      <div className="p-4 mt-20">
+      <div className="p-4 mt-20 relative ">
         <h2 className="text-black text-center font-jost text-lg md:text-xl font-semibold mb-6">
           Produtos Relacionados
         </h2>
-        <div className="mx-auto px-4 sm:px-2 md:px-8 lg:px-20 xl:px-40">
+
+        <div className="w-full relative mx-auto  px-4 sm:px-2 md:px-8 lg:px-20 xl:px-40">
           <Carousel cards={cards} />
         </div>
       </div>

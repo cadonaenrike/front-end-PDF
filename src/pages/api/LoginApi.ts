@@ -10,3 +10,21 @@ export const login = async (loginData: LoginData) => {
     throw error;
   }
 };
+export const loginCode = async (loginDataCode: {}) => {
+  try {
+    const response = await api.post("/verificar-codigo", loginDataCode);
+    return response.data;
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw error;
+  }
+};
+export const loginSendEmail = async (loginDataSendMail: {}) => {
+  try {
+    const response = await api.post("/enviar-codigo", loginDataSendMail);
+    return response.data;
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw error;
+  }
+};

@@ -4,6 +4,7 @@ import { getProducts } from "@/pages/api/adminProducts";
 import { ProductAdmin } from "@/interfaces/ProductData";
 import EditProductModal from "./modals/EditProductModal";
 import ConfirmDeleteModal from "./modals/DeleteProductModal";
+import CombosProducts from "./modals/CombosProductModal";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,6 +35,7 @@ const Products = () => {
     const fetchUpdatedProducts = async () => {
       try {
         const data = await getProducts();
+
         setProducts(data);
       } catch (error) {
         console.error("Erro ao atualizar produtos", error);
@@ -63,7 +65,8 @@ const Products = () => {
           className="border rounded-md bg-gray-200 text-black p-2 w-full md:w-1/3"
         />
       </div>
-      <div className="w-full flex justify-end mb-4">
+      <div className="w-full flex justify-end mb-4 gap-4">
+        <CombosProducts products={products} triggerUpdate={triggerUpdate} />
         <AddProductModal triggerUpdate={triggerUpdate} />
       </div>
 
@@ -117,6 +120,7 @@ const Products = () => {
                       <div className="flex flex-wrap gap-2">
                         <EditProductModal
                           product={product}
+                          products={products}
                           triggerUpdate={triggerUpdate}
                         />
                         <ConfirmDeleteModal
@@ -131,7 +135,6 @@ const Products = () => {
               </tbody>
             </table>
           </div>
-
         )}
       </div>
     </div>

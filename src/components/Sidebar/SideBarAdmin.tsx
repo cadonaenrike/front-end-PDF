@@ -60,7 +60,7 @@ const SidebarAdmin: React.FC<SidebarProps> = ({
             <FaDollarSign className="mr-2" />
             <span>Financeiro</span>
           </li>
-          <li
+          {/* <li
             className={`flex items-center p-4 border-b-2 border-black hover:bg-blue-200 transition ${
               activeComponent === "Banners"
                 ? "bg-blue-500 rounded-lg border-white text-white"
@@ -70,7 +70,7 @@ const SidebarAdmin: React.FC<SidebarProps> = ({
           >
             <FaImage className="mr-2" />
             <span>Banners Loja</span>
-          </li>
+          </li> */}
           <li
             onClick={handleLogout}
             className="flex items-center p-4 border-b-2 border-black text-black hover:bg-blue-200 transition"

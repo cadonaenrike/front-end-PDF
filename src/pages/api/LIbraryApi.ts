@@ -18,3 +18,12 @@ export const getProductById = async (id_product: number) => {
     throw error;
   }
 };
+export const getProductByIdFromPdf = async (id_product: number) => {
+  try {
+    const response = await api.get(`/produto/${id_product}/pdf`);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    throw error;
+  }
+};

@@ -8,6 +8,7 @@ export interface ProductData {
   imageSrc: string;
   imageAlt: string;
   category: string;
+  url: string;
 }
 export interface ProductAdmin {
   id: number;
@@ -17,7 +18,9 @@ export interface ProductAdmin {
   nivel_ensino: string;
   valor: string;
   componente_curricular: string;
-  fotos: string[]; // Array de strings que contém as fotos em formato base64
+  fotos: string[];
+  selectedproducts: null | any[];
+  url: string | null;
 }
 
 export interface FetchedProduct {

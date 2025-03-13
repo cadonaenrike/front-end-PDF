@@ -1,20 +1,21 @@
 // pages/login.tsx
-
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { login } from "./api/LoginApi";
+import { login, loginSendEmail } from "./api/LoginApi";
 import { LoginData } from "@/interfaces/LoginData";
-import ChangePasswordModal from "@/components/About/modals/ChangePasswordModal";
+import TwoStepLoginModal from "@/components/loginComponents/confirmationCodeModal";
 
 const Login = () => {
   const [loginData, setLoginData] = useState<LoginData>({
     email: "",
     senha: "",
   });
-  const [emailSubscribe, setEmailSubscribe] = useState <string | null>(null);
+  const [emailSubscribe, setEmailSubscribe] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCodeModal, setShowCodeModal] = useState(false);
+  const [tokenReturn, setTokenReturn] = useState<string>("");
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,14 +33,22 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       const response = await login(loginData);
-      sessionStorage.setItem("jwt", response.token);
-      toast.success("Login realizado com sucesso!");
-      router.push("/");
+      if (response) {
+        setTokenReturn(response.token);
+        setShowCodeModal(true);
+        loginSendEmail({ email: loginData.email });
+        toast.success("Código enviado para o seu e-mail!");
+      }
     } catch (error) {
       toast.error("Falha ao fazer login. Por favor, tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleLoginSuccess = (token: string) => {
+    sessionStorage.setItem("jwt", tokenReturn);
+    router.push("/");
   };
 
   const handleRedirectToSubscribe = () => {
@@ -74,19 +83,12 @@ const Login = () => {
             onChange={handleChange}
           />
 
-          <ChangePasswordModal
-            bg=""
-            color="black"
-            title="Esqueceu a sua senha?"
-            subtitle="Preencha os campos abaixo para recuperar."
-          />
-
           <button
             type="submit"
             disabled={isSubmitting}
             className="w-full bg-blue-800 text-white p-3 font-jost text-base font-semibold rounded-md mt-8 hover:bg-blue-600 transition-all duration-200"
           >
-            {isSubmitting ? "Entrando..." : "Entrar"}
+            {isSubmitting ? "Enviando código..." : "Entrar"}
           </button>
         </form>
       </div>
@@ -120,6 +122,14 @@ const Login = () => {
           Cadastrar
         </button>
       </div>
+
+      {/* Renderiza o modal para o código se o primeiro passo foi concluído */}
+      {showCodeModal && (
+        <TwoStepLoginModal
+          email={loginData.email}
+          onSuccess={handleLoginSuccess}
+        />
+      )}
     </div>
   );
 };

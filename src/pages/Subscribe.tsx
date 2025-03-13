@@ -54,7 +54,7 @@ const Subscribe = () => {
         cpf: accountData.cpf.replace(/\D/g, ""),
         telefoneCelular: accountData.telefoneCelular.replace(/\D/g, ""),
       };
-      console.log(cleanData);
+     
       const response = await createAccount(cleanData);
       window.location.href = "/Login";
       toast.success("Conta criada com sucesso!");
