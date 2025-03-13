@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Select from "react-select";
 import { FaEdit, FaSpinner } from "react-icons/fa";
 import {
   Dialog,
@@ -13,14 +14,22 @@ import { ProductAdmin } from "@/interfaces/ProductData";
 import { updateProduct } from "@/pages/api/adminProducts";
 import { toast } from "react-toastify";
 
+export interface OptionType {
+  label: string;
+  value: string;
+}
+
 interface EditProductModalProps {
   product: ProductAdmin;
   triggerUpdate: () => void;
+  // Lista de todos os produtos disponíveis para composição de combo
+  products: ProductAdmin[];
 }
 
 const EditProductModal: React.FC<EditProductModalProps> = ({
   product,
   triggerUpdate,
+  products,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [nomeProduto, setNomeProduto] = useState(product.nome_produto);
@@ -33,9 +42,24 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const [componenteCurricular, setComponenteCurricular] = useState(
     product.componente_curricular
   );
+  const [url, setUrl] = useState(product.url || "");
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [fotoFiles, setFotoFiles] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Para o multi-select, se o produto for combo, inicializa com os produtos selecionados
+  const comboInitial: OptionType[] = product.selectedproducts
+    ? (product.selectedproducts
+        .map((id: number) => {
+          const found = products.find((p) => p.id === id);
+          return found
+            ? { label: found.nome_produto, value: found.id.toString() }
+            : null;
+        })
+        .filter((item) => item !== null) as OptionType[])
+    : [];
+  const [selectedOptions, setSelectedOptions] =
+    useState<OptionType[]>(comboInitial);
 
   const categorias = [
     "Novo Ensino Médio",
@@ -60,6 +84,12 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
     "Sociologia",
   ];
 
+  // Cria opções a partir da lista de produtos disponíveis
+  const options: OptionType[] = products.map((p) => ({
+    label: p.nome_produto,
+    value: p.id.toString(),
+  }));
+
   const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPdfFile(e.target.files ? e.target.files[0] : null);
   };
@@ -67,7 +97,6 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const handleFotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      // Verifica se alguma imagem excede 1 MB
       const isValid = Array.from(files).every((file) => {
         if (file.size > 1024 * 1024) {
           toast.error(
@@ -77,12 +106,10 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
         }
         return true;
       });
-
-      // Atualiza o estado somente se todas as imagens forem válidas
       if (isValid) {
         setFotoFiles(files);
       } else {
-        setFotoFiles(null); // Limpa o estado se alguma imagem for inválida
+        setFotoFiles(null);
       }
     }
   };
@@ -104,15 +131,13 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Verificação final das imagens antes de enviar
     if (
-      !fotoFiles ||
+      fotoFiles &&
       Array.from(fotoFiles).some((file) => file.size > 1024 * 1024)
     ) {
       toast.error("Por favor, selecione imagens de até 1 MB.");
-      return; // Impede o envio se houver imagens maiores que 1 MB
+      return;
     }
-
     setLoading(true);
 
     const formData = new FormData();
@@ -122,11 +147,19 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
     formData.append("nivel_ensino", nivelEnsino);
     formData.append("valor", valor.replace("R$", "").trim());
     formData.append("componente_curricular", componenteCurricular);
+    formData.append("url", url);
+
+    // Se for combo (selectedproducts é array), envia os IDs selecionados via multi-select
+    if (product.selectedproducts !== null) {
+      const ids = selectedOptions.map((option) => option.value);
+      formData.append("selectedProducts", JSON.stringify(ids));
+    } else {
+      formData.append("selectedProducts", JSON.stringify(null));
+    }
 
     if (pdfFile) {
       formData.append("pdf", pdfFile);
     }
-
     if (fotoFiles) {
       Array.from(fotoFiles).forEach((file) => {
         formData.append("fotos", file);
@@ -211,7 +244,9 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
               type="file"
               id="uploadProduto"
               name="uploadProduto"
-              onChange={handlePdfChange}
+              onChange={(e) =>
+                setPdfFile(e.target.files ? e.target.files[0] : null)
+              }
               accept="application/pdf"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
@@ -258,7 +293,6 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
               ))}
             </select>
           </div>
-
           <div>
             <label
               htmlFor="nivelEnsino"
@@ -299,6 +333,43 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
+          <div className="col-span-1">
+            <label
+              htmlFor="url"
+              className="block text-sm font-medium text-gray-700"
+            >
+              URL das imagens
+            </label>
+            <input
+              type="text"
+              id="url"
+              name="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://exemplo.com/..."
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          {product.selectedproducts !== null && (
+            <div className="col-span-2">
+              <label
+                htmlFor="selectedProducts"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Produtos do Combo
+              </label>
+              <Select
+                isMulti
+                options={options}
+                value={selectedOptions}
+                onChange={(selected) =>
+                  setSelectedOptions(selected as OptionType[])
+                }
+                placeholder="Selecione os produtos..."
+              />
+            </div>
+          )}
+
           <DialogFooter className="col-span-2 flex justify-end mt-4">
             <button
               type="submit"

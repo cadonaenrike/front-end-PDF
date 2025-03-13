@@ -17,7 +17,9 @@ export interface ProductAdmin {
   nivel_ensino: string;
   valor: string;
   componente_curricular: string;
-  fotos: string[]; // Array de strings que contém as fotos em formato base64
+  fotos: string[];
+  selectedproducts: null | any[];
+  url: string | null;
 }
 
 export interface FetchedProduct {

@@ -29,6 +29,8 @@
     "react-dom": "^18",
     "react-icons": "^5.2.1",
     "react-input-mask": "^2.0.4",
+    "react-multi-select-component": "^4.3.4",
+    "react-select": "^5.10.1",
     "react-slick": "^0.30.2",
     "react-toastify": "^10.0.5",
     "sharp": "^0.33.4",

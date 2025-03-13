@@ -1,6 +1,6 @@
 import { useState } from "react";
+import Select from "react-select";
 import { FaPlus, FaSpinner } from "react-icons/fa";
-import { addProduct } from "@/pages/api/adminProducts";
 import { toast } from "react-toastify";
 import {
   Dialog,
@@ -12,12 +12,22 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import api from "@/pages/api/api";
+import { ProductAdmin } from "@/interfaces/ProductData";
 
-interface AddProductModalProps {
-  triggerUpdate: () => void;
+export interface OptionType {
+  label: string;
+  value: string;
 }
 
-const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
+interface CombosProductsProps {
+  triggerUpdate: () => void;
+  products: ProductAdmin[];
+}
+
+const CombosProducts: React.FC<CombosProductsProps> = ({
+  triggerUpdate,
+  products,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [nomeProduto, setNomeProduto] = useState("");
   const [descricao, setDescricao] = useState("");
@@ -25,10 +35,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
   const [nivelEnsino, setNivelEnsino] = useState("");
   const [valor, setValor] = useState("");
   const [componenteCurricular, setComponenteCurricular] = useState("");
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [url, setUrl] = useState(""); // Novo estado para a URL
+  const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
   const [fotoFiles, setFotoFiles] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
-  const [url, setUrl] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const categorias = [
@@ -52,17 +62,17 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
     "Eletivas",
   ];
 
-  const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPdfFile(e.target.files ? e.target.files[0] : null);
-  };
+  // Converte os produtos em opções para o react-select
+  const options: OptionType[] = products.map((product) => ({
+    label: product.nome_produto,
+    value: product.id.toString(),
+  }));
 
   const handleFotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      // Verifique o tamanho de cada imagem e impeça a seleção se alguma for maior que 1 MB
       const isValid = Array.from(files).every((file) => {
         if (file.size > 1024 * 1024) {
-          // 1 MB
           toast.error(
             `A imagem ${file.name} excede o limite de 1 MB. Por favor, escolha outra imagem.`
           );
@@ -70,16 +80,15 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
         }
         return true;
       });
-
-      // Atualiza o estado apenas se todas as imagens forem válidas
       if (isValid) {
         setFotoFiles(files);
       } else {
-        setFotoFiles(null); // Nenhuma imagem será definida
+        setFotoFiles(null);
       }
     }
   };
 
+  // Formata o valor para moeda brasileira
   const formatCurrency = (value: string) => {
     const cleanValue = value.replace(/\D/g, "");
     const formattedValue = (Number(cleanValue) / 100).toLocaleString("pt-BR", {
@@ -94,91 +103,107 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
     setValor(formatCurrency(e.target.value));
   };
 
+  // Função para fazer upload de uma imagem em partes (chunks)
+  const uploadImageInParts = async (
+    file: File,
+    fileIndex: number,
+    totalFiles: number,
+    selectedProductIds: string[]
+  ) => {
+    const partSize = 1024 * 1024 * 2; // 2 MB por parte
+    const totalParts = Math.ceil(file.size / partSize);
+    const nomeArquivo = file.name;
+
+    for (let i = 0; i < totalParts; i++) {
+      const start = i * partSize;
+      const end = Math.min(start + partSize, file.size);
+      const part = file.slice(start, end);
+
+      const formData = new FormData();
+      formData.append("part", part);
+      formData.append("partIndex", i.toString());
+      formData.append("totalParts", totalParts.toString());
+      formData.append("nomeArquivo", nomeArquivo);
+      formData.append("nome_produto", nomeProduto);
+      formData.append("descricao", descricao);
+      formData.append("categoria", categoria);
+      formData.append("nivel_ensino", nivelEnsino);
+      formData.append("valor", valor.replace("R$", "").trim());
+      formData.append("componente_curricular", componenteCurricular);
+      formData.append("url", url); 
+      formData.append("selectedProducts", JSON.stringify(selectedProductIds));
+
+      try {
+        await api.post("/adicionar-produto-v2", formData, {
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const progress = Math.round(
+                (progressEvent.loaded / progressEvent.total) * 100
+              );
+              // Calcula um progresso geral considerando o índice do arquivo e a parte atual
+              setUploadProgress(
+                ((fileIndex + (i + 1) / totalParts) / totalFiles) * 100
+              );
+            }
+          },
+        });
+        console.log(
+          `Arquivo ${fileIndex + 1} - Parte ${
+            i + 1
+          } de ${totalParts} enviada com sucesso`
+        );
+      } catch (error) {
+        console.error("Erro ao enviar parte:", error);
+        throw error;
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Verifique se as fotos são válidas antes de permitir o envio
-    if (
-      !fotoFiles ||
-      Array.from(fotoFiles).some((file) => file.size > 1024 * 1024)
-    ) {
-      toast.error("Por favor, selecione imagens de até 1 MB.");
-      return; // Interrompe o envio se houver alguma imagem inválida
+
+    if (selectedOptions.length === 0) {
+      toast.error("Selecione pelo menos um produto");
+      return;
     }
+
+    if (!fotoFiles) {
+      toast.error("Por favor, selecione imagens de até 1 MB.");
+      return;
+    }
+
     setLoading(true);
+    const selectedProductIds = selectedOptions.map((option) => option.value);
 
-    const partSize = 1024 * 1024 * 2; // 4 MB por parte
-    const nomeArquivo = pdfFile?.name || "";
-    const totalParts = Math.ceil(pdfFile!.size / partSize || 0);
-
-    const uploadPdfInParts = async (file: File) => {
-      for (let i = 0; i < totalParts; i++) {
-        const start = i * partSize;
-        const end = Math.min(start + partSize, file.size);
-        const part = file.slice(start, end);
-
-        const formData = new FormData();
-        formData.append("part", part);
-        formData.append("partIndex", i.toString());
-        formData.append("totalParts", totalParts.toString());
-        formData.append("nomeArquivo", nomeArquivo);
-        formData.append("nome_produto", nomeProduto);
-        formData.append("descricao", descricao);
-        formData.append("categoria", categoria);
-        formData.append("nivel_ensino", nivelEnsino);
-        formData.append("valor", valor.replace("R$", "").trim());
-        formData.append("componente_curricular", componenteCurricular);
-        formData.append("url", url);
-
-        // Adiciona as fotos apenas na primeira parte
-        if (i === 0 && fotoFiles) {
-          Array.from(fotoFiles).forEach((file) => {
-            formData.append("fotos", file);
-          });
-        }
-
-        try {
-          await api.post("/adicionar-produto-v2", formData, {
-            onUploadProgress: (progressEvent) => {
-              if (progressEvent.total) {
-                const progress = Math.round(
-                  (progressEvent.loaded / progressEvent.total) * 100
-                );
-                setUploadProgress(progress);
-              }
-            },
-          });
-
-          console.log(`Parte ${i + 1} de ${totalParts} enviada com sucesso`);
-
-          // Atualiza o progresso do upload
-          setUploadProgress(((i + 1) / totalParts) * 100);
-        } catch (error) {
-          console.error("Erro ao enviar parte:", error);
-          setLoading(false);
-          return;
-        }
+    try {
+      const totalFiles = fotoFiles.length;
+      for (let fileIndex = 0; fileIndex < totalFiles; fileIndex++) {
+        const file = fotoFiles[fileIndex];
+        await uploadImageInParts(
+          file,
+          fileIndex,
+          totalFiles,
+          selectedProductIds
+        );
       }
 
-      console.log("Upload completo");
-      toast.success("Produto Cadastrado com sucesso!");
+      toast.success("Combos de produtos associados com sucesso!");
       setLoading(false);
       setIsOpen(false);
       triggerUpdate();
-      // Limpar os campos do formulário
+
+      // Limpa os campos do formulário
       setNomeProduto("");
       setDescricao("");
       setCategoria("");
       setNivelEnsino("");
       setValor("");
       setComponenteCurricular("");
-      setPdfFile(null);
+      setUrl(""); // Limpa o campo URL
+      setSelectedOptions([]);
       setFotoFiles(null);
-    };
-
-    if (pdfFile) {
-      uploadPdfInParts(pdfFile);
-    } else {
-      alert("Selecione um arquivo PDF para enviar");
+    } catch (error) {
+      toast.error("Erro ao associar combos de produtos");
       setLoading(false);
     }
   };
@@ -190,16 +215,17 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
           onClick={() => setIsOpen(true)}
           className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md"
         >
-          <FaPlus className="mr-2" /> Adicionar Produto
+          <FaPlus className="mr-2" /> Combos de Produtos
         </button>
       </DialogTrigger>
       <DialogContent className="p-6 bg-white rounded-lg shadow-lg max-w-4xl w-full">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            Adicionar Produto
+            Criar Combos de Produtos
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-500">
-            Preencha os campos abaixo para adicionar um novo produto.
+            Preencha os campos abaixo para criar produtos já existentes como
+            combos.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 mt-4">
@@ -208,7 +234,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
               htmlFor="nomeProduto"
               className="block text-sm font-medium text-gray-700"
             >
-              Nome do Produto
+              Nome do Combo
             </label>
             <input
               type="text"
@@ -235,41 +261,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
               onChange={handleValorChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="uploadProduto"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Upload do produto (PDF)
-            </label>
-            <input
-              type="file"
-              id="uploadProduto"
-              name="uploadProduto"
-              onChange={handlePdfChange}
-              accept="application/pdf"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-          <div className="col-span-1">
-            <label
-              htmlFor="url"
-              className="block text-sm font-medium text-gray-700"
-            >
-              URL das imagens
-            </label>
-            <input
-              type="text"
-              id="url"
-              name="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              className="mt-1 block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="https://exemplo.com/..."
             />
           </div>
           <div className="col-span-2">
@@ -314,7 +305,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
               ))}
             </select>
           </div>
-
           <div>
             <label
               htmlFor="nivelEnsino"
@@ -337,12 +327,27 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
               <option value="Ensino Médio">Ensino Médio</option>
             </select>
           </div>
+          
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Selecione os produtos para o combo
+            </label>
+            <Select
+              isMulti
+              options={options}
+              value={selectedOptions}
+              onChange={(selected) =>
+                setSelectedOptions(selected as OptionType[])
+              }
+              placeholder="Selecione os produtos..."
+            />
+          </div>
           <div>
             <label
               htmlFor="fotosProduto"
               className="block text-sm font-medium text-gray-700"
             >
-              Fotos do produto
+              Fotos do combo
             </label>
             <input
               type="file"
@@ -351,11 +356,27 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
               onChange={handleFotosChange}
               accept="image/*"
               multiple
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
-
+          <div className="col-span-1">
+            <label
+              htmlFor="url"
+              className="block text-sm font-medium text-gray-700"
+            >
+              URL das imagens
+            </label>
+            <input
+              type="text"
+              id="url"
+              name="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="https://exemplo.com/..."
+            />
+          </div>
           <DialogFooter className="col-span-2 flex justify-end mt-4">
             <button
               type="submit"
@@ -365,7 +386,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
               {loading ? (
                 <FaSpinner className="animate-spin mr-2" />
               ) : (
-                "Adicionar Produto"
+                "Criar Combos"
               )}
             </button>
             <button
@@ -383,4 +404,4 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ triggerUpdate }) => {
   );
 };
 
-export default AddProductModal;
+export default CombosProducts;

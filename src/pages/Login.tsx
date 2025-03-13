@@ -13,7 +13,7 @@ const Login = () => {
     email: "",
     senha: "",
   });
-  const [emailSubscribe, setEmailSubscribe] = useState <string | null>(null);
+  const [emailSubscribe, setEmailSubscribe] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
