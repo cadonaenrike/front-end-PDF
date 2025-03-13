@@ -20,7 +20,7 @@ const CategoriesAllPage: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const fetchedProducts: FetchedProduct[] = await getAllProducts();
-        const mappedProducts: ProductData[] = fetchedProducts.map(
+        const mappedProducts: any[] = fetchedProducts.map(
           (product: FetchedProduct) => ({
             id: product.id.toString(),
             title: product.nome_produto,
