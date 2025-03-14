@@ -7,7 +7,7 @@ import hummus from "hummus";
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '10mb' // Aumenta o limite para 10mb, ajuste conforme necessário
+      sizeLimit: '20mb' 
     }
   }
 };
@@ -41,15 +41,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const inputPath = path.join(tempDir, `tmp-input-${timestamp}.pdf`);
     const outputPath = path.join(tempDir, `tmp-output-${timestamp}.pdf`);
 
-    console.log("Escrevendo arquivo de entrada:", inputPath);
     fs.writeFileSync(inputPath, pdfBuffer);
-
-    console.log("Criando escritor do HummusJS para", outputPath);
     // Cria o escritor para o PDF criptografado
     const writer = hummus.createWriter(outputPath, {
       userPassword: password,
       ownerPassword: password,
-      userProtectionFlag: 4, // Ajuste as restrições conforme necessário
+      userProtectionFlag: 12,
     });
 
     writer.appendPDFPagesFromPDF(inputPath);
