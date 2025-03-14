@@ -14,7 +14,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-function base64ToUint8Array(base64: string) {
+function base64ToUint8Array(base64: string): Uint8Array {
   const raw = atob(base64);
   const array = new Uint8Array(raw.length);
   for (let i = 0; i < raw.length; i++) {
@@ -48,32 +48,71 @@ const PdfCardComponent: React.FC<PdfCardProps> = ({
     }
 
     try {
+      // Obtém o PDF (em base64) a partir da sua API
       const response = await getProductByIdFromPdf(Number(id));
       const base64Pdf = response.pdf;
+
+      // Converte o PDF base64 para bytes e carrega o documento
       const pdfBytes = base64ToUint8Array(base64Pdf);
       const pdfDoc = await PDFDocument.load(pdfBytes);
       const pages = pdfDoc.getPages();
       const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-      // Adiciona marca d'água em todas as páginas
+      // Adiciona uma marca d'água em todas as páginas
       pages.forEach((page) => {
         const { height } = page.getSize();
         const text = `Comprado por: ${userName} Nº ${id}`;
         page.drawText(text, {
-          x: 580, 
+          x: 580,
           y: height / 20,
           size: 12,
           font,
           color: rgb(0, 0, 0),
-          rotate: degrees(90), 
-          opacity: 0.3, 
+          rotate: degrees(90),
+          opacity: 0.3,
         });
       });
 
+      // Salva as alterações no PDF e gera um Blob
       const updatedPdfBytes = await pdfDoc.save();
-      const blob = new Blob([updatedPdfBytes], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      window.open(url, "_blank");
+      const pdfBlob = new Blob([updatedPdfBytes], { type: "application/pdf" });
+
+      // Converte o Blob para base64 para enviar à API de criptografia
+      const reader = new FileReader();
+      reader.readAsDataURL(pdfBlob);
+      reader.onloadend = async () => {
+        const resultStr = reader.result?.toString();
+        if (!resultStr) return;
+        // Remove o header "data:application/pdf;base64,"
+        const base64data = resultStr.split(",")[1];
+
+        // Envia o PDF para a rota de API que aplica a criptografia (HummusJS no backend)
+        const encryptionResponse = await fetch("/api/encrypt-pdf", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            pdfBase64: base64data,
+            password: lastFourDigits,
+          }),
+        });
+
+        const encryptionResult = await encryptionResponse.json();
+
+        if (encryptionResponse.ok) {
+          // Força o download do PDF criptografado
+          const encryptedPdfBase64 = encryptionResult.pdfEncryptedBase64;
+          const linkSource = `data:application/pdf;base64,${encryptedPdfBase64}`;
+          const downloadLink = document.createElement("a");
+          downloadLink.href = linkSource;
+          downloadLink.download = `${title}-criptografado.pdf`;
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+        } else {
+          toast.error(encryptionResult.message);
+        }
+      };
+
       setIsModalOpen(false);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
