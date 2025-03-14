@@ -38,6 +38,7 @@ const PdfCardComponent: React.FC<PdfCardProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [enteredPassword, setEnteredPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handlePdfClick = async () => {
     const lastFourDigits = userCPF.slice(-4);
@@ -48,6 +49,7 @@ const PdfCardComponent: React.FC<PdfCardProps> = ({
     }
 
     try {
+      setLoading(true);
       // Obtém o PDF (em base64) a partir da sua API
       const response = await getProductByIdFromPdf(Number(id));
       const base64Pdf = response.pdf;
@@ -111,12 +113,14 @@ const PdfCardComponent: React.FC<PdfCardProps> = ({
         } else {
           toast.error(encryptionResult.message);
         }
+        setLoading(false);
       };
 
       setIsModalOpen(false);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
       toast.error("Ocorreu um erro ao gerar o PDF.");
+      setLoading(false);
     }
   };
 
@@ -166,12 +170,14 @@ const PdfCardComponent: React.FC<PdfCardProps> = ({
               <button
                 onClick={handlePdfClick}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                disabled={loading}
               >
-                Confirmar
+                {loading ? "Processando..." : "Confirmar"}
               </button>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                disabled={loading}
               >
                 Cancelar
               </button>

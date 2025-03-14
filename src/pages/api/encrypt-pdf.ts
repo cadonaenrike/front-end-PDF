@@ -4,6 +4,14 @@ import os from "os";
 import path from "path";
 import hummus from "hummus";
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb' // Aumenta o limite para 10mb, ajuste conforme necessário
+    }
+  }
+};
+
 const bufferToBase64 = (buffer: Buffer): string => {
   return buffer.toString("base64");
 };
@@ -25,7 +33,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Converte o PDF de base64 para Buffer
-    const pdfBuffer = Buffer.from(pdfBase64, "base64");
+    const pdfBuffer : any = Buffer.from(pdfBase64, "base64");
 
     // Usa o diretório temporário do sistema para criar arquivos temporários
     const tempDir = os.tmpdir();
