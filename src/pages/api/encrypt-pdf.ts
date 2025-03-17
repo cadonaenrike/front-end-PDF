@@ -7,9 +7,9 @@ import hummus from "hummus";
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '20mb' 
-    }
-  }
+      sizeLimit: "20mb",
+    },
+  },
 };
 
 const bufferToBase64 = (buffer: Buffer): string => {
@@ -33,7 +33,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Converte o PDF de base64 para Buffer
-    const pdfBuffer : any = Buffer.from(pdfBase64, "base64");
+    const pdfBuffer: any = Buffer.from(pdfBase64, "base64");
 
     // Usa o diretório temporário do sistema para criar arquivos temporários
     const tempDir = os.tmpdir();
@@ -42,10 +42,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const outputPath = path.join(tempDir, `tmp-output-${timestamp}.pdf`);
 
     fs.writeFileSync(inputPath, pdfBuffer);
+    const ownerPassword = Math.random().toString(36).substring(2, 15);
     // Cria o escritor para o PDF criptografado
     const writer = hummus.createWriter(outputPath, {
       userPassword: password,
-      ownerPassword: password,
+      ownerPassword: ownerPassword,
       userProtectionFlag: 12,
     });
 
