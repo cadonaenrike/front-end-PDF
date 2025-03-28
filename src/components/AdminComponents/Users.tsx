@@ -1,12 +1,17 @@
 import { GetUsers } from "@/pages/api/users";
 import { useState, useEffect } from "react";
 import ConfirmDeleteUserModal from "./modals/DeleteUserModal";
-
+import ViewTermsHistoryModal from "./modals/ViewTermsHistoryModal";
+import { FaEye } from "react-icons/fa";
 
 const Users = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [isTermsHistoryModalOpen, setIsTermsHistoryModalOpen] = useState(false);
+  const [selectedUserTerms, setSelectedUserTerms] = useState<string[] | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -29,15 +34,21 @@ const Users = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredUsers = users.filter(user =>
-    user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.cpf.includes(searchTerm)
+  const openTermsHistoryModal = (terms: string[]) => {
+    setSelectedUserTerms(terms);
+    setIsTermsHistoryModalOpen(true);
+  };
+
+  const filteredUsers = users.filter(
+    (user) =>
+      user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.cpf.includes(searchTerm)
   );
 
   const triggerUpdate = () => {
     setLoading(true);
-    GetUsers().then(response => {
+    GetUsers().then((response) => {
       if (response.status === 200) {
         setUsers(response.data);
       }
@@ -60,9 +71,9 @@ const Users = () => {
 
       {loading ? (
         <div className=" text-center p-6">
-        <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
-        <p className="mt-2 text-gray-500">Carregando...</p>
-      </div>
+          <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
+          <p className="mt-2 text-gray-500">Carregando...</p>
+        </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border rounded-lg">
@@ -84,13 +95,17 @@ const Users = () => {
             </thead>
             <tbody>
               {filteredUsers.length > 0 ? (
-                filteredUsers.map(user => (
+                filteredUsers.map((user) => (
                   <tr key={user.id}>
                     <td className="px-6 py-4 whitespace-nowrap border-b">
-                      <span className="text-sm font-medium text-gray-900">{user.nome}</span>
+                      <span className="text-sm font-medium text-gray-900">
+                        {user.nome}
+                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap border-b">
-                      <span className="text-sm text-gray-500">{user.email}</span>
+                      <span className="text-sm text-gray-500">
+                        {user.email}
+                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap border-b">
                       <span className="text-sm text-gray-500">{user.cpf}</span>
@@ -103,6 +118,14 @@ const Users = () => {
                           userName={user.name}
                           triggerUpdate={triggerUpdate}
                         />
+                        <button
+                          onClick={() =>
+                            openTermsHistoryModal(user.termos || [])
+                          }
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          <FaEye className="w-5 h-5" />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -118,6 +141,11 @@ const Users = () => {
           </table>
         </div>
       )}
+      <ViewTermsHistoryModal
+        isOpen={isTermsHistoryModalOpen}
+        onClose={() => setIsTermsHistoryModalOpen(false)}
+        termsHistory={selectedUserTerms}
+      />
     </div>
   );
 };

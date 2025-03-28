@@ -6,15 +6,33 @@ import { FiBookOpen } from "react-icons/fi";
 import { payment } from "./api/cartApi"; // API de pagamento
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"; // Importar os componentes do Dialog
+import { EditAbout } from "@/pages/api/about"; // Serviço para atualizar os termos
+import { format } from "date-fns";
+import { DecodedToken } from "@/interfaces/decodeType";
+import decryptJwt from "@/components/decripted/decript";
 
 const CartPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<ProductData[]>([]);
   const [billingType, setBillingType] = useState("PIX");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false); // Estado para abrir o modal
+  const [isTermsAgreed, setIsTermsAgreed] = useState(false); // Estado para saber se o usuário concordou com os termos
+  const [accountData, setAccountData] = useState<DecodedToken | null>(null);
+
   const router = useRouter();
 
   useEffect(() => {
     const token = sessionStorage.getItem("jwt");
+    const data = decryptJwt();
+    setAccountData(data);
     const storedCartItems = JSON.parse(sessionStorage.getItem("cart") || "[]");
     setCartItems(storedCartItems);
 
@@ -38,17 +56,20 @@ const CartPage: React.FC = () => {
   };
 
   const handlePayment = async () => {
+    if (!isTermsAgreed) {
+      setIsTermsModalOpen(true); // Abre o modal se os termos não forem aceitos
+      return;
+    }
+
     const jwtToken = sessionStorage.getItem("jwt");
     if (!jwtToken) {
       toast.error("Usuário não autenticado!");
       return;
     }
 
-    // Extrair o ID do usuário a partir do JWT
     const decodedToken = JSON.parse(atob(jwtToken.split(".")[1]));
     const userId = decodedToken.usuario.id;
 
-    // Preparar os dados do pagamento
     const data = {
       billingType,
       value: totalAmount,
@@ -58,7 +79,6 @@ const CartPage: React.FC = () => {
       idUsuario: userId,
     };
 
-    // Salvar os dados do pagamento no sessionStorage
     sessionStorage.setItem(
       "paymentData",
       JSON.stringify({
@@ -70,7 +90,6 @@ const CartPage: React.FC = () => {
     try {
       const response = await payment(decodedToken.usuario.cpf, data);
       if (response && response.resultado && response.resultado.invoiceUrl) {
-        // Abrir o link da fatura em uma nova aba
         window.open(response.resultado.invoiceUrl, "_blank");
       } else {
         toast.error("Erro ao obter o link de pagamento.");
@@ -82,6 +101,21 @@ const CartPage: React.FC = () => {
   };
 
   const totalAmount = cartItems.reduce((acc, item) => acc + item.price, 0);
+
+  const handleTermsAgree = async () => {
+    const currentDate = format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"); // Data e hora atual
+
+    try {
+      await EditAbout({ termos: currentDate }, accountData!.usuario.id);
+      setIsTermsAgreed(true);
+      handlePayment();
+      setIsTermsModalOpen(false);
+      toast.success("Você concordou com os termos.");
+    } catch (error) {
+      toast.error("Erro ao salvar a aceitação dos termos.");
+      console.error(error);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -198,6 +232,71 @@ const CartPage: React.FC = () => {
           </div>
         </>
       )}
+
+      {/* Modal de Aviso de Termos */}
+      <Dialog open={isTermsModalOpen} onOpenChange={setIsTermsModalOpen}>
+        <DialogContent className="p-4 bg-white rounded-lg shadow-xl max-w-lg w-full space-y-6">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold text-gray-900">
+              AVISO IMPORTANTE
+            </DialogTitle>
+          </DialogHeader>
+
+          <DialogDescription className="text-sm text-gray-600 space-y-4">
+            <p className="leading-relaxed">
+              <strong className="font-semibold">
+                USO EXCLUSIVO COM OS SEUS ALUNOS
+              </strong>
+              .
+              <span className="block mt-2">
+                É PROIBIDA A REPRODUÇÃO, VENDA E COMPARTILHAMENTO DESTE
+                MATERIAL. TODAS AS APOSTILAS DO CAÇA ATIVIDADES ESCOLARES ESTÃO
+                PROTEGIDAS COM SENHA, DE USO PESSOAL DO COMPRADOR.
+              </span>
+              <span className="block mt-2">
+                ALÉM DISSO, EM TODAS AS PÁGINAS, ESTÃO O SEU NOME E UM CÓDIGO DE
+                COMPRA PARA LOCALIZAR RAPIDAMENTE O <strong>DONO</strong> DO
+                MATERIAL.
+              </span>
+              <span className="block mt-2">
+                A VIOLAÇÃO DOS DIREITOS EXCLUSIVOS DO PRODUTOR SOBRE AS OBRAS É
+                CRIME (ARTIGO 184 DO CÓDIGO PENAL). CASO SEJA FEITA A
+                REPRODUÇÃO, VENDA OU COMPARTILHAMENTO, NOS RESERVAMOS O DIREITO
+                DE ENTRAR COM PROCESSOS E AÇÕES LEGAIS PARA RESPONSABILIZÁ-LO
+                POR PLÁGIO E DANOS AOS DIREITOS AUTORAIS.
+              </span>
+              <span className="block mt-2">
+                AGRADECEMOS DESDE JÁ A SUA COLABORAÇÃO PARA QUE ESTE MATERIAL
+                NÃO SEJA REPRODUZIDO. BOM USO!
+              </span>
+            </p>
+
+            {/* Dados do Usuário */}
+            <div className="mt-6 p-2 bg-gray-100 rounded-lg shadow-sm">
+              <p className="text-base text-gray-800 font-medium">
+                Dados do Usuário:
+              </p>
+              <p className="mt-2 text-sm text-gray-600">
+                <strong className="font-semibold text-base">Nome:</strong>{" "}
+                {accountData?.usuario.nome}
+              </p>
+              <p className="mt-2 text-sm text-gray-600">
+                <strong className="font-semibold text-base">CPF:</strong>{" "}
+                {accountData?.usuario.cpf}
+              </p>
+            </div>
+          </DialogDescription>
+
+          <DialogFooter className="flex justify-center mt-8">
+            <button
+              onClick={handleTermsAgree}
+              className="px-6 py-3 bg-green-600 text-white text-base font-semibold rounded-md shadow-md transition-transform transform hover:bg-green-700 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
+            >
+              Estou ciente e concordo
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
