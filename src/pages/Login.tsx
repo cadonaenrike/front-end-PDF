@@ -85,12 +85,12 @@ const Login = () => {
             value={loginData.senha}
             onChange={handleChange}
           />
-          {/* <ChangePasswordModal
+          <ChangePasswordModal
             bg=""
             color="black"
             title="Esqueceu a sua senha?"
             subtitle="Preencha os campos abaixo para recuperar."
-          /> */}
+          />
           <button
             type="submit"
             disabled={isSubmitting}
